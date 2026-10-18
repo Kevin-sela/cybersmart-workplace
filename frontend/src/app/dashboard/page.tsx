@@ -31,6 +31,18 @@ export default function DashboardPage() {
       <section className="dashboard-greeting"><h1>Good morning{profile ? `, ${profile.full_name.split(" ")[0]}` : ""}</h1><p>A few useful ways to practise and keep moving.</p></section>
       <LearningOverviewSummary progress={progress} completedModules={modulesShown} totalModules={COURSE_MODULES.length}/>
 
+      <section className="overview-panel dashboard-notifications" aria-labelledby="dashboard-notifications-title">
+        <div className="dashboard-notifications-heading">
+          <div><span className="dashboard-notifications-eyebrow">STAY IN THE LOOP</span><h2 id="dashboard-notifications-title">Notifications</h2><p>Course announcements, learning reminders, and account updates will appear here.</p></div>
+          <span className="dashboard-notifications-count" aria-label="No unread notifications">0 new</span>
+        </div>
+        <div className="dashboard-notifications-empty" role="status">
+          <span className="dashboard-notifications-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg></span>
+          <div><strong>You’re all caught up</strong><p>We’ll let you know when there’s something new about your learning.</p></div>
+        </div>
+        <Link className="dashboard-notifications-settings" href="/dashboard/settings">Manage notification preferences <span aria-hidden="true">→</span></Link>
+      </section>
+
       <div className="overview-section-heading course-cards-heading"><div><h2>Course modules</h2><p>Four short modules for safer work.</p></div></div>
       <div className="module-page-list overview-course-list">
         {COURSE_MODULES.map((module) => {
