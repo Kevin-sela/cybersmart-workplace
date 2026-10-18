@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ProfileChip } from "@/components/account/profile-chip";
 
 function ShieldMark() {
   return <svg viewBox="0 0 48 52" aria-hidden="true" className="shield-mark"><path d="M24 3 42 10v13c0 12-7.2 20-18 26C13.2 43 6 35 6 23V10L24 3Z" fill="currentColor"/><path d="M19 23v-4a5 5 0 0 1 10 0v4m-12 0h14v12H17z" fill="none" stroke="white" strokeWidth="2.8" strokeLinejoin="round"/><circle cx="24" cy="29" r="1.7" fill="white"/></svg>;
@@ -29,7 +28,7 @@ export default function Home() {
       <div className="header-inner">
         <Link className="site-brand" href="/" aria-label="CyberSmart Workplace home"><ShieldMark/><span>CyberSmart<small>WORKPLACE</small></span></Link>
         <nav className="main-nav" aria-label="Main navigation"><a className="nav-current" href="#home">Home</a><a href="#learning-path">Courses</a><Link href="/dashboard">Dashboard</Link><a href="#about">About</a></nav>
-        <div className="header-actions"><ProfileChip name="Sign in" badge="Learner" href="/sign-in" className="site-profile-chip" ariaLabel="Sign in to your learner account"/><Link className="header-cta" href="/sign-up">Get started</Link></div>
+        <div className="header-actions"><Link className="header-dashboard" href="/sign-in">Sign in</Link><Link className="header-cta" href="/sign-up">Get started</Link></div>
       </div>
     </header>
 
