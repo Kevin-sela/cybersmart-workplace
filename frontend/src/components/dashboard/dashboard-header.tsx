@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { api, UserProfile } from "@/services/api";
 import { enablePushNotifications, isPushEnabled, loadOneSignal } from "./push-notifications";
+import { ProfileChip } from "@/components/account/profile-chip";
 
 type DashboardHeaderProps = { active?: "overview" | "modules" | "progress" };
 type NavItem = { label: string; href: string; icon: "home" | "modules" | "practice" | "discussion" | "settings" | "user" };
@@ -111,7 +112,7 @@ export function DashboardHeader({ active }: DashboardHeaderProps) {
             </button>
             {notificationsOpen&&<div className="dashboard-notification-popover" role="dialog" aria-label="Notification settings"><strong>Notifications</strong><p>Get course updates and reminders on this device.</p>{process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID ? <><button type="button" className="dashboard-push-button" onClick={turnOnPush} disabled={pushBusy || pushEnabled}>{pushBusy ? "Connecting…" : pushEnabled ? "Push notifications enabled" : "Enable push notifications"}</button>{pushMessage&&<small>{pushMessage}</small>}</> : <small>Push setup is pending. Add NEXT_PUBLIC_ONESIGNAL_APP_ID to the frontend environment.</small>}</div>}
           </div>
-          <Link href={user ? "/dashboard/profile" : "/sign-in"} className="dashboard-user-pill dashboard-user-profile" aria-label={user ? `Learner profile for ${user.full_name}` : "Sign in to your learner profile"}><span className="user-avatar"><Icon kind="user"/></span><span className="dashboard-user-name">{user?.full_name ?? "Sign in"}</span>{user && <span className="dashboard-learner-badge">Learner</span>}<span className="user-chevron" aria-hidden="true">⌄</span></Link>
+          <ProfileChip name={user?.full_name ?? "Sign in"} badge={user ? `${user.role[0].toUpperCase()}${user.role.slice(1)}` : "Learner"} href={user ? "/dashboard/profile" : "/sign-in"} signedIn={Boolean(user)} className="dashboard-profile-chip" ariaLabel={user ? `Open ${user.role} profile for ${user.full_name}` : "Sign in to your learner account"}/>
         </div>
       </div>
     </header>

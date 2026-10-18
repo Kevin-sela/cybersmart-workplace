@@ -37,6 +37,7 @@ def serialize_user(db: Session, user: User) -> UserRead:
     return UserRead(
         id=str(user.id), email=user.email, full_name=user.full_name, role=user.role,
         bio=profile.bio if profile else None, locale=profile.locale if profile else "en",
+        created_at=user.created_at, profile_updated_at=profile.updated_at if profile else None,
     )
 
 

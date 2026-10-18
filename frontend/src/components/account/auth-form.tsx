@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { FormEvent, useEffect, useState } from "react";
 import { api } from "@/services/api";
+import { ProfileChip } from "./profile-chip";
 
 export function AuthForm({ mode }: { mode: "sign-in" | "sign-up" }) {
   const [error, setError] = useState("");
@@ -47,7 +48,7 @@ export function AuthForm({ mode }: { mode: "sign-in" | "sign-up" }) {
     </>}
     <form onSubmit={submit} className="account-form">
       {step === "email" ? <label>Email address<input name="email" type="email" autoComplete="email" maxLength={254} value={email} onChange={event => setEmail(event.target.value)} required autoFocus /></label> : <>
-        <div className="account-email-row"><span>{email}</span><button type="button" onClick={() => { setStep("email"); setError(""); }}>Change</button></div>
+        <ProfileChip name={email} badge="Learner" onClick={() => { setStep("email"); setError(""); }} className="auth-profile-chip" ariaLabel="Change the email address for this learner account"/>
         {signUp && <label>Full name<input name="full_name" autoComplete="name" minLength={2} maxLength={120} required autoFocus /></label>}
         <label>Password<input name="password" type="password" autoComplete={signUp ? "new-password" : "current-password"} minLength={signUp ? 12 : 1} maxLength={128} required autoFocus={!signUp} />{signUp && <small>Use at least 12 characters.</small>}</label>
         {signUp && <label>Confirm password<input name="confirm_password" type="password" autoComplete="new-password" minLength={12} maxLength={128} required /></label>}

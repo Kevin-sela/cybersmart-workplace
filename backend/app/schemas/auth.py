@@ -1,4 +1,5 @@
 import unicodedata
+from datetime import datetime
 from typing import Self
 
 from pydantic import EmailStr, Field, field_validator, model_validator
@@ -56,6 +57,8 @@ class UserRead(ApiSchema):
     role: UserRole
     bio: str | None = None
     locale: str = "en"
+    created_at: datetime
+    profile_updated_at: datetime | None = None
 
 
 class AuthResponse(ApiSchema):

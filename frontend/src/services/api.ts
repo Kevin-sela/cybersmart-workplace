@@ -5,6 +5,8 @@ export type UserProfile = {
   role: "learner" | "instructor" | "admin";
   bio: string | null;
   locale: string;
+  created_at: string;
+  profile_updated_at: string | null;
 };
 export type ProgressSummary = { completed_lessons: number; total_lessons: number; percent_complete: number; items: Array<{ lesson_id: string; lesson_title: string; module_week: number; status: string }> };
 export type CourseContent = { id: string; slug: string; title: string; description: string; duration_weeks: number; modules: Array<{ id: string; week_number: number; title: string; summary: string | null; position: number; lessons: Array<{ id: string; slug: string; title: string; content_type: string; body: string | null; transcript: string | null; estimated_minutes: number | null; position: number }> }> };
@@ -44,6 +46,7 @@ export const api = {
   signUp: (data: { email: string; full_name: string; password: string; confirm_password: string }) => request<{ user: UserProfile; message: string }>("/session/register", { method: "POST", body: JSON.stringify(data) }),
   signOut: () => request<{ message: string }>("/session/end", { method: "POST" }),
   me: () => request<UserProfile>("/session/current"),
+  profile: () => request<UserProfile>("/account"),
   updateProfile: (data: { full_name: string; bio: string | null; locale: string }) => request<UserProfile>("/account", { method: "PATCH", body: JSON.stringify(data) }),
   courses: () => request<CourseContent[]>("/learning/catalog"),
   course: (slug: string) => request<CourseContent>(`/learning/catalog/${encodeURIComponent(slug)}`),
