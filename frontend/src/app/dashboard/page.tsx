@@ -1,0 +1,55 @@
+"use client";
+
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
+import { DashboardHeader } from "@/components/dashboard/dashboard-header";
+import { LatestQuizSummary, LearningOverviewSummary, OverviewPractice } from "@/components/dashboard/overview-practice";
+import { COURSE_MODULES, COURSE_PROGRESS, LESSON_PROGRESS_KEY } from "@/lib/course";
+import { api, ProgressSummary, UserProfile } from "@/services/api";
+
+export default function DashboardPage() {
+  const [completed, setCompleted] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [apiProgress, setApiProgress] = useState<ProgressSummary | null>(null);
+
+  useEffect(() => {
+    setCompleted(window.localStorage.getItem(LESSON_PROGRESS_KEY) === "complete");
+    setLoaded(true);
+    api.me().then(setProfile).catch(() => setProfile(null));
+    api.progress().then(setApiProgress).catch(() => setApiProgress(null));
+  }, []);
+
+  const completedModules = loaded && completed ? 1 : 0;
+  const modulesShown = Math.max(1, completedModules);
+  const progress = apiProgress?.percent_complete ?? Math.max(COURSE_PROGRESS, completedModules * COURSE_PROGRESS);
+
+  return <div className="dashboard-page">
+    <DashboardHeader />
+    <main className="dashboard-main overview-main" id="dashboard">
+      <section className="dashboard-greeting"><h1>Good morning{profile ? `, ${profile.full_name.split(" ")[0]}` : ""}</h1><p>A few useful ways to practise and keep moving.</p></section>
+      <LearningOverviewSummary progress={progress} completedModules={modulesShown} totalModules={COURSE_MODULES.length}/>
+
+      <div className="overview-section-heading course-cards-heading"><div><h2>Course modules</h2><p>Four short modules for safer work.</p></div></div>
+      <div className="module-page-list overview-course-list">
+        {COURSE_MODULES.map((module) => {
+          const available = module.week === 1;
+          const isComplete = available && completed;
+          const moduleProgress = module.week === 1 ? 25 : 0;
+          const content = <Card className={`module-overview-card module-overview-card-${module.week}`}>
+            <div className="module-overview-main"><span className="module-overview-number">{String(module.week).padStart(2, "0")}</span><span className="module-overview-divider"/><div className="module-overview-copy"><CardTitle>{module.title}</CardTitle>{module.week === 1 && isComplete && <span className="module-overview-complete">Complete</span>}</div></div>
+            <CardDescription>{module.detail}</CardDescription>
+            <CardContent className="module-overview-progress"><strong>{moduleProgress > 0 ? "1" : "0"} / 4</strong><span className="module-overview-track" role="progressbar" aria-label={`${module.title} progress`} aria-valuenow={moduleProgress} aria-valuemin={0} aria-valuemax={100}><i style={{width:`${moduleProgress}%`}}/></span></CardContent>
+          </Card>;
+          const href = module.href ?? `/dashboard/modules/${module.week}`;
+          return <Link className="module-page-link" href={href} key={module.week} aria-label={`${isComplete ? "Review" : "Open"} ${module.title}`}>{content}</Link>;
+        })}
+      </div>
+
+      <LatestQuizSummary />
+      <OverviewPractice />
+      <footer className="dashboard-footer"><span>CyberSmart Workplace</span><span>Practical learning for safer work</span><a href="#dashboard">Back to top ↑</a></footer>
+    </main>
+  </div>;
+}

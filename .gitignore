@@ -1,0 +1,28 @@
+# Python
+**/.venv/
+**/venv/
+**/__pycache__/
+**/.pytest_cache/
+**/.mypy_cache/
+**/.ruff_cache/
+*.py[cod]
+*.db
+*.sqlite3
+
+# Node and generated frontend output
+**/node_modules/
+**/.next/
+**/.next-build-verify/
+**/out/
+**/.vercel/
+**/tsconfig.tsbuildinfo
+
+# Local secrets and environment files
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Editor and operating system files
+.DS_Store
+Thumbs.db

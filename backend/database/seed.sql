@@ -1,0 +1,5 @@
+-- The source-of-truth seed is idempotent SQLAlchemy code so SQLite and
+-- PostgreSQL receive the same course rows. After `alembic upgrade head`, run:
+--     python -m app.db.seed
+-- See app/db/seed_data.py and database/SOURCES.md for reviewed synthetic data.
+-- This file intentionally performs no database writes when passed to psql.

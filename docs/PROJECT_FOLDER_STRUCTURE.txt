@@ -1,0 +1,28 @@
+CyberSmart-Workplace/
+├── backend/
+│   ├── app/
+│   │   ├── api/v1/
+│   │   ├── core/
+│   │   ├── db/
+│   │   ├── models/
+│   │   ├── repositories/
+│   │   ├── schemas/
+│   │   └── services/
+│   └── tests/
+├── frontend/
+│   └── src/
+│       ├── components/
+│       ├── features/
+│       ├── hooks/
+│       ├── pages/
+│       ├── services/
+│       └── styles/
+├── docs/
+│   ├── PRD.md
+│   ├── DESIGN.md
+│   ├── ARCHITECTURE.md
+│   └── PROJECT_FOLDER_STRUCTURE.txt
+├── report/
+│   └── IT404_Report_Tasks_A_B_Draft.docx
+├── AGENTS.md
+└── README.md

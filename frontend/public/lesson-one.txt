@@ -1,0 +1,23 @@
+CYBERSMART WORKPLACE
+Week 1 · Recognise threats
+First steps: spot a suspicious message
+
+A phishing message tries to persuade you to share information, open a file, or visit a website. It may arrive by email, text, or a workplace chat. The message can look routine, so pause and check it before acting.
+
+LOOK FOR THE CLUES
+
+1. An unexpected request. The message asks you to sign in, share a code, pay an invoice, or act urgently.
+2. A sender that does not quite match. Check the full address or account name, not only the display name.
+3. A link that leads somewhere unexpected. On a computer, hover to preview the destination. On a phone, press and hold only if your device safely shows the address without opening it. If in doubt, use a trusted bookmark or contact the organisation through a known channel.
+4. An unusual attachment. Do not open an unexpected file just because the message looks familiar.
+5. Pressure or secrecy. A request to skip normal checks is a reason to slow down.
+
+WHAT TO DO
+
+Do not reply, open the attachment, or follow the link while you are unsure. Verify the request using a contact method you already trust, and follow your workplace process for reporting suspicious messages. If you already clicked or shared information, contact your IT or security team promptly.
+
+QUICK CHECK
+
+You receive an unexpected message saying your account will close in ten minutes unless you sign in through its link. What is the safest first step?
+
+Pause. Do not use the link. Go to the service through a known bookmark or contact your IT team using a trusted channel.
