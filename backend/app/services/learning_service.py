@@ -7,7 +7,7 @@ from app.models.entities import Lesson, ProgressStatus, User
 from app.repositories import learning as repository
 from app.schemas.learning import (
     CourseRead, LessonRead, ModuleRead, ProgressItem, ProgressRead,
-    ProgressUpdate, QuizFeedback, QuizQuestionRead, QuizOptionRead, QuizRead,
+    ProgressUpdate, QuizAttemptSummary, QuizFeedback, QuizQuestionRead, QuizOptionRead, QuizRead,
     QuizResult, QuizSubmit,
 )
 
@@ -61,16 +61,36 @@ def get_progress(db: Session, user: User) -> ProgressRead:
     rows = repository.get_progress(db, enrollment.id)
     items = [ProgressItem(
         lesson_id=lesson.id,
+        lesson_slug=lesson.slug,
         lesson_title=lesson.title,
+        estimated_minutes=lesson.estimated_minutes,
         module_week=module.week_number,
         status=progress.status.value if progress else ProgressStatus.NOT_STARTED.value,
         completed_at=progress.completed_at if progress else None,
     ) for lesson, progress, module in rows]
     completed = sum(item.status == ProgressStatus.COMPLETED.value for item in items)
     total = len(items)
+    module_rows: dict[UUID, list[ProgressStatus]] = {}
+    for lesson, progress, module in rows:
+        module_rows.setdefault(module.id, []).append(progress.status if progress else ProgressStatus.NOT_STARTED)
+    completed_modules = sum(all(status == ProgressStatus.COMPLETED for status in statuses) for statuses in module_rows.values())
+    quizzes = repository.list_published_quizzes(db, course.id)
+    attempts = repository.list_quiz_attempts(db, course.id, user.id)
+    passed_quizzes = {attempt.quiz_id for attempt in attempts if attempt.passed}
+    total_activities = total + len(quizzes)
+    completed_activities = completed + len(passed_quizzes)
+    latest_attempt = attempts[0] if attempts else None
     return ProgressRead(
         completed_lessons=completed, total_lessons=total,
-        percent_complete=round((completed / total) * 100) if total else 0,
+        completed_modules=completed_modules, total_modules=len(module_rows),
+        quiz_attempts_count=len(attempts), passed_quizzes_count=len(passed_quizzes),
+        latest_quiz=QuizAttemptSummary(
+            score_percent=float(latest_attempt.score_percent),
+            passed=latest_attempt.passed,
+            submitted_at=latest_attempt.submitted_at,
+        ) if latest_attempt else None,
+        completed_activities=completed_activities, total_activities=total_activities,
+        percent_complete=round((completed_activities / total_activities) * 100) if total_activities else 0,
         items=items,
     )
 

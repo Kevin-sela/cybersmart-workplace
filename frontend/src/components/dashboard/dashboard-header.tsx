@@ -46,7 +46,12 @@ export function DashboardHeader({ active }: DashboardHeaderProps) {
   const notificationsRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const [user, setUser] = useState<UserProfile | null>(null);
-  useEffect(() => { api.me().then(setUser).catch(() => setUser(null)); }, []);
+  const [userLoading, setUserLoading] = useState(true);
+  useEffect(() => {
+    let mounted = true;
+    api.me().then(value => { if (mounted) setUser(value); }).catch(() => { if (mounted) setUser(null); }).finally(() => { if (mounted) setUserLoading(false); });
+    return () => { mounted = false; };
+  }, []);
 
   useEffect(() => {
     const query = window.matchMedia("(max-width: 700px)");
@@ -112,7 +117,7 @@ export function DashboardHeader({ active }: DashboardHeaderProps) {
             </button>
             {notificationsOpen&&<div className="dashboard-notification-popover" role="dialog" aria-label="Notification settings"><strong>Notifications</strong><p>Get course updates and reminders on this device.</p>{process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID ? <><button type="button" className="dashboard-push-button" onClick={turnOnPush} disabled={pushBusy || pushEnabled}>{pushBusy ? "Connecting…" : pushEnabled ? "Push notifications enabled" : "Enable push notifications"}</button>{pushMessage&&<small>{pushMessage}</small>}</> : <small>Push setup is pending. Add NEXT_PUBLIC_ONESIGNAL_APP_ID to the frontend environment.</small>}</div>}
           </div>
-          <ProfileChip name={user?.full_name ?? "Sign in"} badge={user ? `${user.role[0].toUpperCase()}${user.role.slice(1)}` : "Learner"} href={user ? "/dashboard/profile" : "/sign-in"} signedIn={Boolean(user)} className="dashboard-profile-chip" ariaLabel={user ? `Open ${user.role} profile for ${user.full_name}` : "Sign in to your learner account"}/>
+          {userLoading ? <span className="dashboard-profile-loading" aria-label="Loading account" /> : <ProfileChip name={user?.full_name ?? "Sign in"} badge={user ? `${user.role[0].toUpperCase()}${user.role.slice(1)}` : "Learner"} href={user ? "/dashboard/profile" : "/sign-in"} signedIn={Boolean(user)} className="dashboard-profile-chip" ariaLabel={user ? `Open ${user.role} profile for ${user.full_name}` : "Sign in to your learner account"}/>}
         </div>
       </div>
     </header>

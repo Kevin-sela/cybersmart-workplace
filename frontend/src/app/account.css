@@ -155,6 +155,8 @@
 .account-profile-chip-badge{width:max-content;max-width:100%;padding:3px 10px;border-radius:999px;background:#dcf3ed;color:#096b61;font-size:11px;font-weight:650;line-height:1.25;white-space:nowrap}
 .account-profile-chip-chevron{width:18px;height:18px;flex:none;margin-left:5px;color:#5e627d}
 .dashboard-profile-chip{min-height:48px;gap:8px;padding:4px 10px 4px 5px}
+.dashboard-profile-loading{display:block;width:154px;height:48px;border-radius:999px;background:linear-gradient(90deg,#f1f2f6 25%,#e7e9ef 50%,#f1f2f6 75%);background-size:200% 100%;animation:profile-chip-loading 1.2s ease-in-out infinite}
+@keyframes profile-chip-loading{to{background-position:-200% 0}}
 .dashboard-profile-chip .profile-chip-avatar{width:38px;height:38px}
 .dashboard-profile-chip .profile-chip-initials{font-size:13px}
 .dashboard-profile-chip .profile-chip-status{width:13px;height:13px}
@@ -173,6 +175,7 @@
 .profile-rail-avatar .profile-chip-initials{font-size:17px}
 .profile-rail-avatar .profile-chip-status{border-color:#1c1c1c}
 @media(max-width:700px){.dashboard-profile-chip{min-height:43px;gap:6px;padding:3px 7px 3px 4px}.dashboard-profile-chip .profile-chip-avatar{width:34px;height:34px}.dashboard-profile-chip .account-profile-chip-name{max-width:100px;font-size:10px}.dashboard-profile-chip .account-profile-chip-badge{font-size:8px}.dashboard-profile-chip .account-profile-chip-chevron{width:14px;margin-left:0}}
+@media(max-width:700px){.dashboard-profile-loading{width:43px;height:43px}}
 @media(max-width:420px){.dashboard-profile-chip{gap:4px;padding-right:5px}.dashboard-profile-chip .profile-chip-avatar{width:30px;height:30px}.dashboard-profile-chip .account-profile-chip-copy{max-width:70px}.dashboard-profile-chip .account-profile-chip-name{max-width:70px;font-size:9px}.dashboard-profile-chip .account-profile-chip-badge{padding:2px 5px;font-size:7px}.dashboard-profile-chip .account-profile-chip-chevron{width:12px}}
 @media(max-width:620px){.site-profile-chip{min-height:40px;gap:6px;padding:3px 8px 3px 4px}.site-profile-chip .profile-chip-avatar{width:32px;height:32px}.site-profile-chip .account-profile-chip-name{font-size:10px}.site-profile-chip .account-profile-chip-badge{padding:2px 6px;font-size:8px}.site-profile-chip .account-profile-chip-chevron{width:13px;margin-left:0}}
 @media(max-width:390px){.site-profile-chip{width:39px;min-width:39px;justify-content:center;padding:3px}.site-profile-chip .profile-chip-avatar{width:30px;height:30px}.site-profile-chip .account-profile-chip-copy,.site-profile-chip .account-profile-chip-chevron{display:none}}

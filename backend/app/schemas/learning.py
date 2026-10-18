@@ -42,15 +42,30 @@ class ProgressUpdate(ApiSchema):
 
 class ProgressItem(ApiSchema):
     lesson_id: UUID
+    lesson_slug: str
     lesson_title: str
+    estimated_minutes: int | None
     module_week: int
     status: str
     completed_at: datetime | None
 
 
+class QuizAttemptSummary(ApiSchema):
+    score_percent: float
+    passed: bool
+    submitted_at: datetime | None
+
+
 class ProgressRead(ApiSchema):
     completed_lessons: int
     total_lessons: int
+    completed_modules: int
+    total_modules: int
+    quiz_attempts_count: int
+    passed_quizzes_count: int
+    latest_quiz: QuizAttemptSummary | None
+    completed_activities: int
+    total_activities: int
     percent_complete: int
     items: list[ProgressItem]
 

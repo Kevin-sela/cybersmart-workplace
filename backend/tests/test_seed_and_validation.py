@@ -3,8 +3,10 @@ from sqlalchemy.orm import Session
 
 from app.db.base import Base
 from app.db.seed_data import seed_demo_content
-from app.models.entities import Course, OAuthIdentity, Question
+from app.models.entities import Course, Lesson, OAuthIdentity, ProgressStatus, Question, Quiz
 from app.repositories.users import get_or_link_google_user
+from app.repositories import learning as learning_repository
+from app.services.learning_service import get_progress
 from app.schemas.auth import RegisterRequest
 from app.schemas.collaboration import ForumPostInput
 from app.schemas.profile import ProfileUpdate
@@ -56,4 +58,47 @@ def test_google_identity_is_linked_to_one_local_learner() -> None:
         second = get_or_link_google_user(db, subject="google-subject-1", email="learner@example.com", full_name="A Learner", password_hash="unused")
         assert first.id == second.id
         assert db.query(OAuthIdentity).count() == 1
+    engine.dispose()
+
+
+def test_progress_counts_saved_lessons_and_passed_quiz_attempts() -> None:
+    engine = create_engine("sqlite://")
+    Base.metadata.create_all(engine)
+    with Session(engine) as db:
+        seed_demo_content(db)
+        user = get_or_link_google_user(
+            db, subject="progress-user", email="progress@example.com",
+            full_name="Progress Learner", password_hash="unused",
+        )
+        course = db.scalar(select(Course).where(Course.slug == "cybersmart-workplace"))
+        lesson = db.scalar(select(Lesson).where(Lesson.slug == "first-steps"))
+        quiz = db.scalar(select(Quiz).where(Quiz.course_id == course.id, Quiz.is_final.is_(True)))
+        assert course is not None and lesson is not None and quiz is not None
+        enrollment = learning_repository.get_enrollment(db, user.id, course.id)
+        assert enrollment is not None
+
+        before = get_progress(db, user)
+        assert before.percent_complete == 0
+        assert before.total_activities == 5
+        assert before.quiz_attempts_count == 0
+
+        learning_repository.submit_quiz(db, quiz, user.id, {}, [], 4, 10, 40, False)
+        failed_attempt = get_progress(db, user)
+        assert failed_attempt.quiz_attempts_count == 1
+        assert failed_attempt.passed_quizzes_count == 0
+        assert failed_attempt.latest_quiz is not None and failed_attempt.latest_quiz.score_percent == 40
+        assert failed_attempt.percent_complete == 0
+
+        lesson_progress = learning_repository.update_progress(db, enrollment.id, lesson, status=ProgressStatus.COMPLETED, seconds=42)
+        learning_repository.submit_quiz(db, quiz, user.id, {}, [], 8, 10, 80, True)
+
+        after = get_progress(db, user)
+        assert after.completed_lessons == 1
+        assert lesson_progress.time_spent_seconds == 42
+        assert after.completed_modules == 1
+        assert after.quiz_attempts_count == 2
+        assert after.passed_quizzes_count == 1
+        assert after.latest_quiz is not None and after.latest_quiz.score_percent == 80
+        assert after.completed_activities == 2
+        assert after.percent_complete == 40
     engine.dispose()

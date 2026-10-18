@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { ProgressDonut } from "@/components/dashboard/progress-donut";
+import { ProgressSummary } from "@/services/api";
 
 const choices = ["Check the sender and don’t open it yet", "Open the document to see what it is", "Reply to ask if it’s real", "Forward it to a colleague for advice"];
 
@@ -15,26 +16,29 @@ function SummaryIcon({ kind }: { kind: "book" | "clock" | "chart" }) {
   return <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">{icon[kind]}</svg>;
 }
 
-export function LearningOverviewSummary({ progress, completedModules, totalModules }: { progress: number; completedModules: number; totalModules: number }) {
+export function LearningOverviewSummary({ progress, completedModules, totalModules, completedLessons, totalLessons, completedActivities, totalActivities, nextLesson, loading }: { progress: number | null; completedModules: number; totalModules: number; completedLessons: number; totalLessons: number; completedActivities: number; totalActivities: number; nextLesson: { title: string; week: number; minutes: number | null } | null; loading: boolean }) {
   return <section className="learning-summary-grid" aria-label="Learning progress overview">
     <article className="summary-panel progress-overview-panel">
       <div className="summary-panel-heading"><h2>Your progress</h2></div>
-      <div className="progress-overview-content"><ProgressDonut value={progress} completedModules={completedModules} totalModules={totalModules} showModuleCount={false}/>
+      <div className="progress-overview-content"><ProgressDonut value={progress} completedUnits={completedActivities} totalUnits={totalActivities} unitLabel="activities" showModuleCount={false}/>
         <div className="progress-overview-stats">
-          <div className="progress-overview-stat"><SummaryIcon kind="book"/><p><strong>{completedModules} / {totalModules}</strong><span>modules completed</span></p></div>
-          <div className="progress-overview-stat"><SummaryIcon kind="clock"/><p><strong>8 min</strong><span>to next lesson</span></p></div>
+          <div className="progress-overview-stat"><SummaryIcon kind="book"/><p><strong>{loading ? "—" : `${completedModules} / ${totalModules}`}</strong><span>modules completed</span></p></div>
+          <div className="progress-overview-stat"><SummaryIcon kind="clock"/><p><strong>{loading ? "—" : `${completedLessons} / ${totalLessons}`}</strong><span>lessons completed</span></p></div>
         </div>
       </div>
     </article>
-    <article className="summary-panel next-lesson-summary"><span className="next-lesson-kicker">NEXT LESSON · 8 MIN</span><h2>Choose safe actions</h2><p>Protect accounts and workplace information.</p><Link href="/dashboard/modules/2" className="next-lesson-button">Continue <span aria-hidden="true">→</span></Link></article>
+    <article className="summary-panel next-lesson-summary"><span className="next-lesson-kicker">{loading ? "LOADING ACTIVITY" : nextLesson ? `NEXT LESSON${nextLesson.minutes ? ` · ${nextLesson.minutes} MIN` : ""}` : "LESSONS COMPLETE"}</span><h2>{loading ? "Checking your progress…" : nextLesson?.title ?? "All lessons completed"}</h2><p>{loading ? "Your saved lessons and quiz results will appear here." : nextLesson ? `Continue with module ${nextLesson.week}.` : "Review your course progress and knowledge check results."}</p>{!loading && <Link href={nextLesson ? `/dashboard/modules/${nextLesson.week}` : "/dashboard/progress"} className="next-lesson-button">{nextLesson ? "Continue" : "View progress"} <span aria-hidden="true">→</span></Link>}</article>
   </section>;
 }
 
-export function LatestQuizSummary() {
+export function LatestQuizSummary({ progress, loading }: { progress: ProgressSummary | null; loading: boolean }) {
+  const latest = progress?.latest_quiz ?? null;
+  const totalQuizzes = progress ? Math.max(0, progress.total_activities - progress.total_lessons) : 0;
+  const unavailable = !loading && !progress;
   return <section className="latest-quiz-strip" aria-label="Latest quiz and course progress">
-    <div className="latest-quiz-result"><span className="latest-quiz-icon"><SummaryIcon kind="chart"/></span><strong>Latest quiz <span>·</span> 80%</strong><span className="latest-quiz-track" role="img" aria-label="Quiz score 80 percent"><i/></span></div>
-    <div className="latest-strip-detail"><SummaryIcon kind="book"/><p><strong>1 / 4</strong><span>modules completed</span></p></div>
-    <div className="latest-strip-detail"><SummaryIcon kind="clock"/><p><strong>8 min</strong><span>to next lesson</span></p></div>
+    <div className="latest-quiz-result"><span className="latest-quiz-icon"><SummaryIcon kind="chart"/></span><strong>{loading ? "Loading quiz activity…" : unavailable ? "Sign in to view quiz activity" : latest ? `Latest quiz · ${latest.score_percent}% · ${latest.passed ? "Passed" : "Not passed"}` : "No quiz attempts yet"}</strong>{latest && <span className="latest-quiz-track" role="img" aria-label={`Quiz score ${latest.score_percent} percent`}><i style={{ width: `${Math.max(0, Math.min(100, latest.score_percent))}%` }}/></span>}</div>
+    <div className="latest-strip-detail"><SummaryIcon kind="book"/><p><strong>{loading || unavailable ? "—" : `${progress?.passed_quizzes_count ?? 0} / ${totalQuizzes}`}</strong><span>knowledge checks passed</span></p></div>
+    <div className="latest-strip-detail"><SummaryIcon kind="clock"/><p><strong>{loading || unavailable ? "—" : progress?.quiz_attempts_count ?? 0}</strong><span>quiz attempts recorded</span></p></div>
   </section>;
 }
 

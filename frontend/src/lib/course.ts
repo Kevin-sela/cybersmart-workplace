@@ -6,5 +6,3 @@ export const COURSE_MODULES = [
   { week: 3, title: "Respond together", detail: "Practise a calm, useful incident response", status: "Coming soon", href: null },
   { week: 4, title: "Final review", detail: "Bring your skills together in the final quiz", status: "Coming soon", href: null },
 ] as const;
-
-export const COURSE_PROGRESS = 25;

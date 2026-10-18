@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
 import { DashboardHeader } from "@/components/dashboard/dashboard-header";
 import { LatestQuizSummary, LearningOverviewSummary, OverviewPractice } from "@/components/dashboard/overview-practice";
-import { COURSE_MODULES, COURSE_PROGRESS, LESSON_PROGRESS_KEY } from "@/lib/course";
+import { COURSE_MODULES, LESSON_PROGRESS_KEY } from "@/lib/course";
 import { api, ProgressSummary, UserProfile } from "@/services/api";
 
 export default function DashboardPage() {
@@ -13,6 +13,7 @@ export default function DashboardPage() {
   const [loaded, setLoaded] = useState(false);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [apiProgress, setApiProgress] = useState<ProgressSummary | null>(null);
+  const [progressLoading, setProgressLoading] = useState(true);
   const [greetingPrefix, setGreetingPrefix] = useState("Good morning");
 
   useEffect(() => {
@@ -25,13 +26,39 @@ export default function DashboardPage() {
     setCompleted(window.localStorage.getItem(LESSON_PROGRESS_KEY) === "complete");
     setLoaded(true);
     api.me().then(setProfile).catch(() => setProfile(null));
-    api.progress().then(setApiProgress).catch(() => setApiProgress(null));
-    return () => window.clearInterval(greetingTimer);
+    const loadProgress = () => {
+      api.progress().then(setApiProgress).catch(() => setApiProgress(null)).finally(() => setProgressLoading(false));
+    };
+    loadProgress();
+    window.addEventListener("focus", loadProgress);
+    window.addEventListener("pageshow", loadProgress);
+    window.addEventListener("cybersmart:learning-updated", loadProgress);
+    const progressTimer = window.setInterval(loadProgress, 30_000);
+    return () => {
+      window.clearInterval(greetingTimer);
+      window.clearInterval(progressTimer);
+      window.removeEventListener("focus", loadProgress);
+      window.removeEventListener("pageshow", loadProgress);
+      window.removeEventListener("cybersmart:learning-updated", loadProgress);
+    };
   }, []);
 
-  const completedModules = loaded && completed ? 1 : 0;
-  const modulesShown = Math.max(1, completedModules);
-  const progress = apiProgress?.percent_complete ?? Math.max(COURSE_PROGRESS, completedModules * COURSE_PROGRESS);
+  const localCompleted = !progressLoading && !apiProgress && loaded && completed;
+  const completedModules = apiProgress?.completed_modules ?? (localCompleted ? 1 : 0);
+  const totalModules = apiProgress?.total_modules ?? COURSE_MODULES.length;
+  const completedLessons = apiProgress?.completed_lessons ?? (localCompleted ? 1 : 0);
+  const totalLessons = apiProgress?.total_lessons ?? COURSE_MODULES.length;
+  const completedActivities = apiProgress?.completed_activities ?? completedLessons;
+  const totalActivities = apiProgress?.total_activities ?? totalLessons + 1;
+  const progress = progressLoading ? null : apiProgress?.percent_complete ?? (totalActivities ? Math.round(completedActivities / totalActivities * 100) : 0);
+  const nextLessonItem = apiProgress?.items.find(item => item.status !== "completed");
+  const nextLesson = progressLoading ? null : nextLessonItem
+    ? { title: nextLessonItem.lesson_title, week: nextLessonItem.module_week, minutes: nextLessonItem.estimated_minutes ?? null }
+    : apiProgress
+      ? null
+      : localCompleted
+        ? { title: "Choose a safe action", week: 2, minutes: 8 }
+        : { title: "First steps: spot a suspicious message", week: 1, minutes: 8 };
   const greeting = `${greetingPrefix}${profile ? `, ${profile.full_name.split(" ")[0]}` : ""}`;
   const confettiColors = ["coral", "gold", "jade", "violet", "pink", "blue"];
 
@@ -42,7 +69,7 @@ export default function DashboardPage() {
         <div className="dashboard-welcome-copy"><span className="dashboard-welcome-kicker"><i aria-hidden="true"/> YOUR LEARNING SPACE</span><h1><span className="sr-only">{greeting}</span><span className="welcome-confetti-text" aria-hidden="true">{Array.from(greetingPrefix).map((letter, index) => <span key={index} className={`welcome-letter welcome-letter-${confettiColors[index % confettiColors.length]}`} style={{ animationDelay: `${index * 35}ms` }}>{letter === " " ? "\u00a0" : letter}</span>)}{profile && <span className="welcome-name">, {profile.full_name.split(" ")[0]}</span>}</span></h1><p>Small steps make a safer workplace. Pick up where you left off.</p></div>
         <div className="dashboard-welcome-art" aria-hidden="true"><span className="welcome-confetti-piece welcome-confetti-one"/><span className="welcome-confetti-piece welcome-confetti-two"/><span className="welcome-confetti-piece welcome-confetti-three"/><span className="welcome-confetti-piece welcome-confetti-four"/><span className="welcome-confetti-piece welcome-confetti-five"/></div>
       </section>
-      <LearningOverviewSummary progress={progress} completedModules={modulesShown} totalModules={COURSE_MODULES.length}/>
+      <LearningOverviewSummary progress={progress} completedModules={completedModules} totalModules={totalModules} completedLessons={completedLessons} totalLessons={totalLessons} completedActivities={completedActivities} totalActivities={totalActivities} nextLesson={nextLesson} loading={progressLoading}/>
 
       <section className="overview-panel dashboard-notifications" aria-labelledby="dashboard-notifications-title">
         <div className="dashboard-notifications-heading">
@@ -60,19 +87,22 @@ export default function DashboardPage() {
       <div className="module-page-list overview-course-list">
         {COURSE_MODULES.map((module) => {
           const available = module.week === 1;
-          const isComplete = available && completed;
-          const moduleProgress = module.week === 1 ? 25 : 0;
+          const moduleItems = apiProgress?.items.filter(item => item.module_week === module.week) ?? [];
+          const moduleLessonsTotal = apiProgress ? moduleItems.length : progressLoading ? 0 : 1;
+          const moduleLessonsCompleted = apiProgress ? moduleItems.filter(item => item.status === "completed").length : (module.week === 1 && localCompleted ? 1 : 0);
+          const isComplete = moduleLessonsTotal > 0 && moduleLessonsCompleted === moduleLessonsTotal;
+          const moduleProgress = moduleLessonsTotal ? Math.round(moduleLessonsCompleted / moduleLessonsTotal * 100) : 0;
           const content = <Card className={`module-overview-card module-overview-card-${module.week}`}>
-            <div className="module-overview-main"><span className="module-overview-number">{String(module.week).padStart(2, "0")}</span><span className="module-overview-divider"/><div className="module-overview-copy"><CardTitle>{module.title}</CardTitle>{module.week === 1 && isComplete && <span className="module-overview-complete">Complete</span>}</div></div>
+            <div className="module-overview-main"><span className="module-overview-number">{String(module.week).padStart(2, "0")}</span><span className="module-overview-divider"/><div className="module-overview-copy"><CardTitle>{module.title}</CardTitle>{isComplete && <span className="module-overview-complete">Complete</span>}</div></div>
             <CardDescription>{module.detail}</CardDescription>
-            <CardContent className="module-overview-progress"><strong>{moduleProgress > 0 ? "1" : "0"} / 4</strong><span className="module-overview-track" role="progressbar" aria-label={`${module.title} progress`} aria-valuenow={moduleProgress} aria-valuemin={0} aria-valuemax={100}><i style={{width:`${moduleProgress}%`}}/></span></CardContent>
+            <CardContent className="module-overview-progress"><strong>{progressLoading ? "—" : moduleLessonsCompleted + " / " + moduleLessonsTotal}</strong><span className="module-overview-track" role="progressbar" aria-label={module.title + " lesson progress"} aria-valuenow={moduleProgress} aria-valuemin={0} aria-valuemax={100}><i style={{width: moduleProgress + "%"}}/></span></CardContent>
           </Card>;
           const href = module.href ?? `/dashboard/modules/${module.week}`;
           return <Link className="module-page-link" href={href} key={module.week} aria-label={`${isComplete ? "Review" : "Open"} ${module.title}`}>{content}</Link>;
         })}
       </div>
 
-      <LatestQuizSummary />
+      <LatestQuizSummary progress={apiProgress} loading={progressLoading}/>
       <OverviewPractice />
       <footer className="dashboard-footer"><span>CyberSmart Workplace</span><span>Practical learning for safer work</span><a href="#dashboard">Back to top ↑</a></footer>
     </main>

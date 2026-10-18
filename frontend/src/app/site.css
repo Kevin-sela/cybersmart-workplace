@@ -826,7 +826,6 @@ a:focus-visible, button:focus-visible, summary:focus-visible { outline: 3px soli
 .latest-quiz-result>strong { flex:none; color:var(--ink); font-size:11px; font-weight:600; }
 .latest-quiz-result>strong span { color:var(--muted); }
 .latest-quiz-track { width:min(100%,120px); height:6px; margin-left:2px; }
-.latest-quiz-track i { width:80%; }
 .latest-strip-detail { display:flex; align-items:center; gap:9px; min-height:30px; padding-left:12px; border-left:1px solid var(--mist); }
 .latest-strip-detail>svg { width:22px; height:22px; flex:none; color:var(--brand-ocean); }
 .latest-strip-detail strong { color:var(--ink); font-size:11px; font-weight:600; line-height:1.2; }

@@ -60,7 +60,7 @@ def update_progress(db: Session, enrollment_id: UUID, lesson: Lesson, *, status:
         progress.status = status
         if progress.started_at is None:
             progress.started_at = now
-    progress.time_spent_seconds = min(86400, progress.time_spent_seconds + seconds)
+    progress.time_spent_seconds = min(86400, (progress.time_spent_seconds or 0) + seconds)
     progress.completed_at = now if status == ProgressStatus.COMPLETED else None
     progress.updated_at = now
     db.commit()
@@ -70,6 +70,19 @@ def update_progress(db: Session, enrollment_id: UUID, lesson: Lesson, *, status:
 
 def find_final_quiz(db: Session, course_id: UUID) -> Quiz | None:
     return db.scalar(select(Quiz).where(Quiz.course_id == course_id, Quiz.is_final.is_(True), Quiz.is_published.is_(True)))
+
+
+def list_published_quizzes(db: Session, course_id: UUID) -> list[Quiz]:
+    return list(db.scalars(select(Quiz).where(Quiz.course_id == course_id, Quiz.is_published.is_(True)).order_by(Quiz.created_at)))
+
+
+def list_quiz_attempts(db: Session, course_id: UUID, user_id: UUID) -> list[QuizAttempt]:
+    return list(db.scalars(
+        select(QuizAttempt)
+        .join(Quiz, Quiz.id == QuizAttempt.quiz_id)
+        .where(Quiz.course_id == course_id, Quiz.is_published.is_(True), QuizAttempt.user_id == user_id)
+        .order_by(QuizAttempt.submitted_at.desc(), QuizAttempt.started_at.desc())
+    ))
 
 
 def quiz_questions(db: Session, quiz_id: UUID) -> list[tuple[Question, list[AnswerOption]]]:

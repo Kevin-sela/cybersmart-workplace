@@ -6,12 +6,24 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { DashboardHeader } from "@/components/dashboard/dashboard-header";
 import { COURSE_MODULES, LESSON_PROGRESS_KEY } from "@/lib/course";
+import { api, ProgressSummary } from "@/services/api";
 
 export default function ModulesPage() {
   const [firstModuleComplete, setFirstModuleComplete] = useState(false);
+  const [progressLoading, setProgressLoading] = useState(true);
+  const [progress, setProgress] = useState<ProgressSummary | null>(null);
 
   useEffect(() => {
-    setFirstModuleComplete(window.localStorage.getItem(LESSON_PROGRESS_KEY) === "complete");
+    const loadProgress = () => api.progress().then(value => { setProgress(value); setFirstModuleComplete(value.items.some(item => item.module_week === 1 && item.status === "completed")); }).catch(() => { setProgress(null); setFirstModuleComplete(window.localStorage.getItem(LESSON_PROGRESS_KEY) === "complete"); }).finally(() => setProgressLoading(false));
+    loadProgress();
+    window.addEventListener("focus", loadProgress);
+    window.addEventListener("pageshow", loadProgress);
+    window.addEventListener("cybersmart:learning-updated", loadProgress);
+    return () => {
+      window.removeEventListener("focus", loadProgress);
+      window.removeEventListener("pageshow", loadProgress);
+      window.removeEventListener("cybersmart:learning-updated", loadProgress);
+    };
   }, []);
 
   return (
@@ -26,7 +38,8 @@ export default function ModulesPage() {
         <div className="module-page-list">
           {COURSE_MODULES.map((module) => {
             const available = module.week === 1;
-            const complete = available && firstModuleComplete;
+            const moduleLessons = progress?.items.filter(item => item.module_week === module.week) ?? [];
+            const complete = progressLoading ? false : progress ? moduleLessons.length > 0 && moduleLessons.every(item => item.status === "completed") : available && firstModuleComplete;
             const content = <Card className={`module-page-card ${available ? "module-page-card-available" : ""}`}>
               <span className={`module-page-number ${complete ? "module-page-number-complete" : ""}`}>{complete ? "✓" : String(module.week).padStart(2, "0")}</span>
               <CardHeader><Badge variant={complete ? "success" : available ? "default" : "muted"}>{complete ? "Complete" : module.status}</Badge><CardTitle>{module.title}</CardTitle><CardDescription>{module.detail}</CardDescription></CardHeader>
