@@ -13,22 +13,35 @@ export default function DashboardPage() {
   const [loaded, setLoaded] = useState(false);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [apiProgress, setApiProgress] = useState<ProgressSummary | null>(null);
+  const [greetingPrefix, setGreetingPrefix] = useState("Good morning");
 
   useEffect(() => {
+    const updateGreeting = () => {
+      const hour = new Date().getHours();
+      setGreetingPrefix(hour >= 5 && hour < 12 ? "Good morning" : hour >= 12 && hour < 17 ? "Good afternoon" : "Good evening");
+    };
+    updateGreeting();
+    const greetingTimer = window.setInterval(updateGreeting, 60_000);
     setCompleted(window.localStorage.getItem(LESSON_PROGRESS_KEY) === "complete");
     setLoaded(true);
     api.me().then(setProfile).catch(() => setProfile(null));
     api.progress().then(setApiProgress).catch(() => setApiProgress(null));
+    return () => window.clearInterval(greetingTimer);
   }, []);
 
   const completedModules = loaded && completed ? 1 : 0;
   const modulesShown = Math.max(1, completedModules);
   const progress = apiProgress?.percent_complete ?? Math.max(COURSE_PROGRESS, completedModules * COURSE_PROGRESS);
+  const greeting = `${greetingPrefix}${profile ? `, ${profile.full_name.split(" ")[0]}` : ""}`;
+  const confettiColors = ["coral", "gold", "jade", "violet", "pink", "blue"];
 
   return <div className="dashboard-page">
     <DashboardHeader />
     <main className="dashboard-main overview-main" id="dashboard">
-      <section className="dashboard-greeting"><h1>Good morning{profile ? `, ${profile.full_name.split(" ")[0]}` : ""}</h1><p>A few useful ways to practise and keep moving.</p></section>
+      <section className="dashboard-greeting dashboard-welcome" aria-label="Welcome">
+        <div className="dashboard-welcome-copy"><span className="dashboard-welcome-kicker"><i aria-hidden="true"/> YOUR LEARNING SPACE</span><h1><span className="sr-only">{greeting}</span><span className="welcome-confetti-text" aria-hidden="true">{Array.from(greetingPrefix).map((letter, index) => <span key={index} className={`welcome-letter welcome-letter-${confettiColors[index % confettiColors.length]}`} style={{ animationDelay: `${index * 35}ms` }}>{letter === " " ? "\u00a0" : letter}</span>)}{profile && <span className="welcome-name">, {profile.full_name.split(" ")[0]}</span>}</span></h1><p>Small steps make a safer workplace. Pick up where you left off.</p></div>
+        <div className="dashboard-welcome-art" aria-hidden="true"><span className="welcome-confetti-piece welcome-confetti-one"/><span className="welcome-confetti-piece welcome-confetti-two"/><span className="welcome-confetti-piece welcome-confetti-three"/><span className="welcome-confetti-piece welcome-confetti-four"/><span className="welcome-confetti-piece welcome-confetti-five"/></div>
+      </section>
       <LearningOverviewSummary progress={progress} completedModules={modulesShown} totalModules={COURSE_MODULES.length}/>
 
       <section className="overview-panel dashboard-notifications" aria-labelledby="dashboard-notifications-title">

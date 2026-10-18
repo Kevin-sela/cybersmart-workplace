@@ -32,7 +32,7 @@ CyberSmart-Workplace/
 ```
 
 ## Proposed technology choices
-- Frontend: React + TypeScript, responsive web UI.
+- Frontend: React + TypeScript with Next.js for a responsive web UI.
 - Backend: FastAPI with Pydantic request/response schemas.
 - Database: PostgreSQL for users, course structure, attempts, progress and survey responses.
 - Testing: pytest for API tests and a frontend test runner selected during implementation.
@@ -49,12 +49,62 @@ These are proposed choices and can be revised to match the team's skills and the
 - **Instructor functions:** view aggregated completion and quiz outcomes.
 
 ## Main request flow
-1. Learner opens a course page in the frontend.
-2. Frontend calls the API using the configured API base URL.
-3. FastAPI validates the request and invokes the relevant service.
-4. The service reads/writes through the repository layer.
-5. The API returns a typed response; the frontend shows content or feedback.
 
+1. **Learner opens the landing page.** The frontend displays the CyberSmart Workplace introduction, course benefits, cybersecurity learning topics, and a clear **Start Learning** button.
+
+2. **Learner navigates to the courses page.** The frontend displays available courses and allows the learner to select a course.
+
+3. **Learner opens a course page.** The frontend displays the course description, learning objectives, modules, lessons, and available quizzes.
+
+4. **Frontend calls the API.** When dynamic course content or learner data is required, the frontend sends an HTTP request using the configured API base URL.
+
+5. **FastAPI validates the request.** The relevant API endpoint validates the incoming request and invokes the appropriate service layer.
+
+6. **The service executes business logic.** The service handles the requested operation and communicates with the repository layer when data access is required.
+
+7. **The repository reads or writes data.** The repository interacts with the database to retrieve or persist course content, lesson information, quiz attempts, learner progress, and other relevant records.
+
+8. **The API returns a typed response.** FastAPI returns a structured response that follows the defined response schema and appropriate HTTP status codes.
+
+9. **The frontend displays the result.** The frontend renders the requested content, updates the learner interface, or displays meaningful feedback when an error occurs.
+
+10. **Learner continues learning.** The learner can navigate between lessons, complete quizzes, view results, and track progress through the learning dashboard.
+
+### Landing page requirements
+
+The landing page is the public entry point of CyberSmart Workplace and must be included in the frontend implementation.
+
+It should contain:
+
+- **Hero section:** A clear introduction to the platform, a cybersecurity-focused headline, supporting text, and a prominent Start Learning button.
+- **Course introduction:** An overview of the cybersecurity awareness course and its learning objectives.
+- **Learning topics:** An introduction to phishing awareness, password security, social engineering, safe browsing, and workplace data protection.
+- **Learning process:** A brief explanation of how learners study lessons, practise cybersecurity scenarios, complete quizzes, and track their progress.
+- **Call to action:** A clear route for learners to browse courses and begin learning.
+- **Footer:** Relevant navigation links, contact information where applicable, and accessibility-related information.
+
+The landing page should use a responsive layout, maintain consistent typography and spacing, support accessible navigation, and provide a clear user journey from the public homepage to the course content.
+
+### Frontend routes
+
+| Route | Purpose |
+|---|---|
+| `/` | Public landing page |
+| `/courses` | Browse available courses |
+| `/courses/:courseId` | View course details and modules |
+| `/learn/:courseId/:lessonId` | Access an individual lesson |
+| `/quiz/:quizId` | Complete a quiz |
+| `/dashboard` | View learning progress and results |
+
+### API interaction principles
+
+- The frontend must use a central configuration for the API base URL rather than hardcoding URLs throughout the application.
+- API requests and responses should follow the defined schemas.
+- Business logic must remain in the service layer rather than being implemented directly in API route handlers or repository classes.
+- Database access must be handled through the repository layer.
+- The frontend must display loading states, successful results, empty states, and meaningful error messages.
+- The landing page should remain accessible even when dynamic course data cannot be retrieved, provided its static content can be rendered independently.
+- Authentication requirements should be applied to protected learner features where necessary without unnecessarily blocking access to the public landing page.
 ## Security and privacy
 - Store secrets in environment variables, never in source control.
 - Validate and authorize instructor-only endpoints on the server.
