@@ -4,26 +4,26 @@ FastAPI + SQLAlchemy API for the CyberSmart Workplace learning app. Routing, ser
 
 ## Local development
 
-Use Python 3.11 or newer.
+Use [uv](https://docs.astral.sh/uv/) to manage Python and dependencies. The project pins Python 3.12 in `.python-version` and supports Python 3.11 through 3.13.
 
 ```powershell
 cd backend
-py -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install -r requirements.txt
+uv sync --all-groups
 Copy-Item .env.example .env
-uvicorn app.main:app --reload
+uv run uvicorn app.main:app --reload
 ```
 
 The default local mode uses SQLite, creates the schema, and seeds the course idempotently at startup. The database file is `backend/cybersmart.db`. The browser app proxies `/api/v1/*` to `http://127.0.0.1:8000`; set `BACKEND_API_ORIGIN` in `frontend/.env.local` to change it.
+
+`uv sync --all-groups` creates the project `.venv` and installs the pinned runtime and development dependencies from `pyproject.toml` and `uv.lock`. Use `uv run` for backend commands so a system Python launcher or shell activation is not required. `requirements.txt` remains available for hosts that install from pip.
 
 ## PostgreSQL
 
 Use PostgreSQL 15 or newer as required in the technical design. Set `DATABASE_URL` in `backend/.env` to a private connection string, then run:
 
 ```powershell
-alembic upgrade head
-python -m app.db.seed
+uv run alembic upgrade head
+uv run python -m app.db.seed
 ```
 
 Never commit `.env` or real learner records. `database/schema.sql` remains the project’s reviewed SQL reference; Alembic is the versioned application migration path.

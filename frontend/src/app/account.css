@@ -4,6 +4,40 @@
 .google-auth-button{display:flex;align-items:center;justify-content:center;gap:11px;width:100%;min-height:46px;padding:10px 14px;border:1px solid #cbd2dc;border-radius:8px;background:#fff;color:#26303b;text-decoration:none;font-size:14px;font-weight:600;transition:background .15s,border-color .15s}.google-auth-button:hover{background:#f8f9fb;border-color:#aeb8c5}.google-auth-button:focus-visible{outline:3px solid rgba(42,157,143,.24);outline-offset:2px}.google-auth-button svg{width:19px;height:19px}.account-divider{display:flex;align-items:center;gap:12px;margin:18px 0 0;color:var(--muted);font-size:12px}.account-divider:before,.account-divider:after{content:"";height:1px;flex:1;background:var(--line)}
 .account-eyebrow{margin:26px 0 8px;font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--teal-dark)}.account-card h1,.dashboard-greeting h1{font-family:var(--font-heading);font-size:30px;line-height:1.2;color:var(--navy);margin:0}.account-intro{color:var(--muted);margin:10px 0 24px}.account-form{display:grid;gap:16px;margin-top:22px}.account-form label{display:grid;gap:7px;font-size:14px;font-weight:600;color:var(--navy)}.account-form input,.account-form textarea{font:inherit;font-weight:400;color:var(--ink);width:100%;padding:11px 12px;border:1px solid #cbd2dc;border-radius:8px;background:#fff;outline:none}.account-form input:focus,.account-form textarea:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(42,157,143,.14)}.account-form input[readonly]{background:#f5f6f8;color:var(--muted)}.account-form label small{font-size:12px;color:var(--muted);font-weight:400}.account-form button{font:inherit;font-weight:600;color:white;background:var(--teal-dark);border:0;border-radius:8px;padding:12px 16px;cursor:pointer}.account-form button:hover{filter:brightness(1.08)}.account-form button:disabled{opacity:.65;cursor:wait}.account-switch{margin:22px 0 0;text-align:center;font-size:14px;color:var(--muted)}.account-switch a,.account-profile-panel a{color:var(--teal-dark);font-weight:600}.account-error{padding:10px 12px;color:#8f241c;background:#fff2ee;border-radius:8px;margin:0;font-size:14px}.account-success{color:#246a48;margin:0;font-size:14px}.account-profile-panel{margin:12px 0 40px}.profile-summary{display:flex;align-items:center;gap:14px;padding-bottom:20px;border-bottom:1px solid var(--line)}.profile-summary h2{font-family:var(--font-heading);font-size:20px;margin:0;color:var(--navy)}.profile-summary p{margin:4px 0 0;color:var(--muted);font-size:14px}.profile-avatar{width:48px;height:48px;display:grid;place-items:center;border-radius:50%;color:#fff;background:var(--teal-dark);font-size:20px;font-weight:700}.account-signout{margin-top:18px;padding:8px 0;border:0;background:none;color:#8f241c;font:inherit;cursor:pointer}.dashboard-user-profile{display:flex;align-items:center;gap:4px}
 @media(max-width:600px){.account-card,.account-profile-panel{padding:24px 20px}.account-card h1,.dashboard-greeting h1{font-size:27px}}
+
+/* Calm, compact account settings inspired by ChatGPT's profile settings. */
+.profile-settings-page{max-width:920px!important;padding-top:36px!important;color:#202123}
+.profile-settings-heading{padding:0 0 24px;border-bottom:1px solid #e5e5e5}
+.profile-settings-heading .account-eyebrow{margin:0 0 8px;color:#6b6b6b;font-size:11px;letter-spacing:.08em}
+.profile-settings-heading h1{margin:0;color:#202123;font-size:30px;line-height:1.2;letter-spacing:-.035em}
+.profile-settings-heading>p:last-child{margin:8px 0 0;color:#6b6b6b;font-size:14px}
+.profile-settings-content{max-width:760px}
+.profile-settings-loading{padding:24px 0;color:#6b6b6b;font-size:14px}
+.profile-settings-loading a{color:#202123;font-weight:600}
+.profile-identity{display:flex;align-items:center;gap:14px;padding:24px 0;border-bottom:1px solid #e5e5e5}
+.profile-identity .profile-avatar{width:52px;height:52px;background:#e6e6e6;color:#202123;font-size:20px}
+.profile-identity h2{margin:0;color:#202123;font-size:16px;font-weight:650}
+.profile-identity p{margin:4px 0 0;color:#6b6b6b;font-size:13px}
+.profile-role{margin-left:auto;padding:5px 10px;border:1px solid #e5e5e5;border-radius:999px;color:#555;font-size:12px}
+.profile-settings-section{display:grid;grid-template-columns:minmax(190px,.8fr) minmax(280px,1.2fr);gap:28px;padding:26px 0;border-bottom:1px solid #e5e5e5}
+.profile-section-copy h2,.profile-danger-zone h2{margin:0;color:#202123;font-size:14px;font-weight:650}
+.profile-section-copy p,.profile-danger-zone p{margin:6px 0 0;color:#6b6b6b;font-size:13px;line-height:1.5}
+.profile-fields{display:grid;gap:16px}
+.profile-settings-form .profile-fields label{gap:6px;color:#353535;font-size:13px;font-weight:600}
+.profile-settings-form .profile-fields input,.profile-settings-form .profile-fields textarea{min-height:40px;padding:9px 11px;border-color:#d9d9d9;border-radius:8px;background:#fff;color:#202123;font-size:14px}
+.profile-settings-form .profile-fields textarea{min-height:90px;resize:vertical}
+.profile-settings-form .profile-fields input:focus,.profile-settings-form .profile-fields textarea:focus{border-color:#8e8e8e;box-shadow:0 0 0 2px rgba(32,33,35,.08)}
+.profile-settings-form .profile-fields input[readonly]{background:#f7f7f7;color:#666}
+.profile-settings-form .profile-fields label small{color:#777;font-size:12px}
+.profile-settings-actions{display:flex;align-items:center;justify-content:flex-end;gap:14px;padding:18px 0;border-bottom:1px solid #e5e5e5}
+.profile-settings-actions .account-error,.profile-settings-actions .account-success{margin-right:auto}
+.profile-settings-actions button,.profile-danger-zone button{min-height:38px;padding:8px 14px;border:0;border-radius:8px;background:#202123;color:#fff;font:inherit;font-size:13px;font-weight:600;cursor:pointer}
+.profile-settings-actions button:hover,.profile-danger-zone button:hover{background:#3a3a3a}
+.profile-settings-actions button:disabled{opacity:.6;cursor:wait}
+.profile-danger-zone{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:22px 0 36px}
+.profile-danger-zone button{border:1px solid #d9d9d9;background:#fff;color:#333}
+.profile-danger-zone button:hover{background:#f7f7f7}
+@media(max-width:700px){.profile-settings-page{padding-top:24px!important}.profile-settings-heading h1{font-size:27px}.profile-settings-section{grid-template-columns:1fr;gap:16px;padding:22px 0}.profile-fields{max-width:100%}.profile-settings-actions{align-items:flex-start;flex-direction:column}.profile-settings-actions .account-error,.profile-settings-actions .account-success{margin:0}.profile-danger-zone{align-items:flex-start}.profile-role{font-size:11px}}
 .account-page{background:#fff;padding:40px 20px}
 .account-card{width:min(100%,400px);padding:0;background:transparent;border:0;border-radius:0;box-shadow:none}
 .account-card .account-eyebrow{margin:32px 0 8px}

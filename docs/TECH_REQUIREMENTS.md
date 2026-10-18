@@ -182,14 +182,13 @@ npm run build
 
 ```bash
 cd backend
-python -m venv .venv
-source .venv/bin/activate           # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-alembic upgrade head                # apply migrations
-uvicorn app.main:app --reload       # http://localhost:8000  (docs at /docs)
-pytest --cov=app
-ruff check . && mypy app
-pip-audit
+uv sync --all-groups
+uv run alembic upgrade head          # apply migrations (PostgreSQL)
+uv run uvicorn app.main:app --reload # http://localhost:8000 (docs at /docs)
+uv run pytest --cov=app
+uv run ruff check .
+uv run mypy app
+uv run pip-audit
 ```
 
 ---
