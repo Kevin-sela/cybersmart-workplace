@@ -65,7 +65,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible { outline: 3px soli
 .impact-intro p { max-width: 370px; margin: 7px 0 0; color: var(--muted); font-size: 14px; line-height: 1.5; }
 .impact-item { display: flex; align-items: center; gap: 11px; color: var(--brand-nav); font-size: 13px; line-height: 1.35; }
 .impact-item>span { display: grid; width: 31px; height: 31px; flex: none; place-items: center; border-radius: 50%; background: var(--white); color: var(--brand-ocean); font-size: 15px; }
-.site-footer { padding: 31px max(32px, calc((100% - 1200px)/2)) 19px; background: #000; color: #fff; }
+.site-footer { padding: 31px max(32px, calc((100% - 1200px)/2)) 19px; border-top: 1px solid rgb(255 255 255 / 24%); background:linear-gradient(115deg,rgb(46 41 78 / 88%),rgb(36 106 143 / 82%)); color:#fff; -webkit-backdrop-filter:blur(18px) saturate(140%); backdrop-filter:blur(18px) saturate(140%); box-shadow:0 -12px 32px rgb(46 41 78 / 8%),inset 0 1px rgb(255 255 255 / 8%); }
 .footer-top { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding-bottom: 24px; }
 .footer-brand, .footer-brand small { color: #fff; }
 .footer-brand .shield-mark { color: var(--brand-gold); }
