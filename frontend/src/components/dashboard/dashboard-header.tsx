@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { api, UserProfile } from "@/services/api";
 
 type DashboardHeaderProps = { active?: "overview" | "modules" | "progress" };
-type NavItem = { label: string; href: string; icon: "home" | "modules" | "practice" | "discussion" | "settings" };
+type NavItem = { label: string; href: string; icon: "home" | "modules" | "practice" | "discussion" | "settings" | "user" };
 
 const navItems: NavItem[] = [
   { label: "Home", href: "/dashboard", icon: "home" },
@@ -23,6 +23,7 @@ function Icon({ kind }: { kind: NavItem["icon"] }) {
     practice: <><path d="M4 19V5m0 14h16"/><path d="m7 15 4-4 3 2 5-6"/></>,
     discussion: <><path d="M20 11.5a7.5 7.5 0 0 1-8 7.5 8.7 8.7 0 0 1-3.5-.7L4 20l1.4-3.3A7.1 7.1 0 0 1 4 12c0-4.1 3.6-7.5 8-7.5s8 3.1 8 7Z"/></>,
     settings: <><circle cx="12" cy="12" r="3"/><path d="M19.4 15a7.5 7.5 0 0 0 0-6l1.3-1-1.8-3.1-1.6.7a7.5 7.5 0 0 0-5.2-3L11.8.8h-3.6L8 2.6a7.5 7.5 0 0 0-5.2 3l-1.6-.7L-.6 8l1.3 1a7.5 7.5 0 0 0 0 6l-1.3 1 1.8 3.1 1.6-.7a7.5 7.5 0 0 0 5.2 3l.2 1.8h3.6l.3-1.8a7.5 7.5 0 0 0 5.2-3l1.6.7 1.8-3.1z" transform="translate(2 0) scale(.9)"/></>,
+    user: <><circle cx="12" cy="8" r="3.5"/><path d="M5 20a7 7 0 0 1 14 0"/></>,
   };
   return <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">{paths[kind]}</svg>;
 }
@@ -86,14 +87,14 @@ export function DashboardHeader({ active }: DashboardHeaderProps) {
             </button>
             {notificationsOpen&&<div className="dashboard-notification-popover" role="status"><strong>Notifications</strong><p>You’re all caught up.</p></div>}
           </div>
-          <Link href={user ? "/dashboard/profile" : "/sign-in"} className="dashboard-user-pill dashboard-user-profile" aria-label={user ? `Learner profile for ${user.full_name}` : "Sign in to your learner profile"}><span className="user-avatar">{user?.full_name.slice(0,1).toUpperCase() ?? "?"}</span><span className="dashboard-user-name">{user?.full_name ?? "Sign in"}</span>{user && <span className="dashboard-learner-badge">Learner</span>}<span className="user-chevron" aria-hidden="true">⌄</span></Link>
+          <Link href={user ? "/dashboard/profile" : "/sign-in"} className="dashboard-user-pill dashboard-user-profile" aria-label={user ? `Learner profile for ${user.full_name}` : "Sign in to your learner profile"}><span className="user-avatar"><Icon kind="user"/></span><span className="dashboard-user-name">{user?.full_name ?? "Sign in"}</span>{user && <span className="dashboard-learner-badge">Learner</span>}<span className="user-chevron" aria-hidden="true">⌄</span></Link>
         </div>
       </div>
     </header>
     {isMobile && sidebarOpen && <button className="dashboard-sidebar-scrim" aria-label="Close learning navigation" onClick={() => setSidebarOpen(false)}/>}
     <aside className={`dashboard-sidebar ${sidebarOpen ? "dashboard-sidebar-open" : "dashboard-sidebar-closed"}`} id="dashboard-learning-sidebar" ref={sidebarRef}>
       <div className="dashboard-sidebar-heading"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 5.5c3.5-1 6.5-.2 9 2v13c-2.5-2.2-5.5-3-9-2z"/><path d="M21 5.5c-3.5-1-6.5-.2-9 2v13c2.5-2.2 5.5-3 9-2z"/></svg><span>Learning</span></div>
-      <nav aria-label="Main learning navigation">{navItems.map(item => <Link key={item.href} href={item.href} className={`dashboard-sidebar-link ${isCurrent(item) ? "dashboard-sidebar-link-active" : ""}`} aria-current={isCurrent(item) ? "page" : undefined} onClick={() => isMobile && setSidebarOpen(false)}><Icon kind={item.icon}/><span>{item.label}</span></Link>)}<Link href="/dashboard/profile" className={`dashboard-sidebar-link ${pathname === "/dashboard/profile" ? "dashboard-sidebar-link-active" : ""}`} aria-current={pathname === "/dashboard/profile" ? "page" : undefined} onClick={() => isMobile && setSidebarOpen(false)}><Icon kind="settings"/><span>Profile</span></Link></nav>
+      <nav aria-label="Main learning navigation">{navItems.map(item => <Link key={item.href} href={item.href} className={`dashboard-sidebar-link ${isCurrent(item) ? "dashboard-sidebar-link-active" : ""}`} aria-current={isCurrent(item) ? "page" : undefined} onClick={() => isMobile && setSidebarOpen(false)}><Icon kind={item.icon}/><span>{item.label}</span></Link>)}</nav>
       <div className="dashboard-sidebar-bottom"><span className="sidebar-course-mark"><Mark/></span><span>CYBERSMART<small>WORKPLACE</small></span></div>
     </aside>
   </>;

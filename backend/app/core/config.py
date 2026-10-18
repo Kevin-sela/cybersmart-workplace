@@ -17,7 +17,7 @@ class Settings(BaseSettings):
     auto_create_sqlite: bool = True
     google_client_id: str = ""
     google_client_secret: str = ""
-    google_redirect_uri: str = "http://localhost:3000/api/v1/auth/google/callback"
+    google_redirect_uri: str = "http://localhost:3000/api/identity/google/callback"
     frontend_origin: str = "http://localhost:3000"
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")

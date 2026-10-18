@@ -253,7 +253,7 @@ Never commit secrets. Provide a `.env.example` with fake values and keep real `.
 | `REFRESH_TOKEN_DAYS` | Backend | Refresh token lifetime |
 | `CORS_ORIGINS` | Backend | Allowed frontend origins |
 | `ENVIRONMENT` | Both | `development`, `test` or `production` |
-| `NEXT_PUBLIC_API_BASE_URL` | Frontend | Central API base URL |
+| `BACKEND_API_ORIGIN` | Next.js server | Private backend destination for frontend API aliases |
 
 `.env.example`:
 
@@ -265,7 +265,7 @@ ACCESS_TOKEN_MINUTES=15
 REFRESH_TOKEN_DAYS=7
 CORS_ORIGINS=http://localhost:3000
 ENVIRONMENT=development
-NEXT_PUBLIC_API_BASE_URL=http://localhost:8000/api/v1
+BACKEND_API_ORIGIN=http://localhost:8000
 ```
 
 ---

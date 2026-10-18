@@ -24,11 +24,11 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
     credentials: "same-origin",
     headers: { ...(init.body ? { "Content-Type": "application/json" } : {}), ...init.headers },
   };
-  let response = await fetch(`/api/v1${path}`, options);
-  if (response.status === 401 && !["/auth/login", "/auth/register", "/auth/refresh", "/auth/logout"].includes(path)) {
+  let response = await fetch(`/api${path}`, options);
+  if (response.status === 401 && !["/session/start", "/session/register", "/session/renew", "/session/end"].includes(path)) {
     try {
-      const refresh = await fetch("/api/v1/auth/refresh", { method: "POST", credentials: "same-origin" });
-      if (refresh.ok) response = await fetch(`/api/v1${path}`, options);
+      const refresh = await fetch("/api/session/renew", { method: "POST", credentials: "same-origin" });
+      if (refresh.ok) response = await fetch(`/api${path}`, options);
     } catch { /* Keep the original authorization error for the caller. */ }
   }
   const payload = await response.json().catch(() => ({}));
@@ -40,21 +40,21 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
 }
 
 export const api = {
-  signIn: (email: string, password: string) => request<{ user: UserProfile; message: string }>("/auth/login", { method: "POST", body: JSON.stringify({ email, password }) }),
-  signUp: (data: { email: string; full_name: string; password: string; confirm_password: string }) => request<{ user: UserProfile; message: string }>("/auth/register", { method: "POST", body: JSON.stringify(data) }),
-  signOut: () => request<{ message: string }>("/auth/logout", { method: "POST" }),
-  me: () => request<UserProfile>("/auth/me"),
-  updateProfile: (data: { full_name: string; bio: string | null; locale: string }) => request<UserProfile>("/users/me", { method: "PATCH", body: JSON.stringify(data) }),
-  courses: () => request<CourseContent[]>("/courses"),
-  course: (slug: string) => request<CourseContent>(`/courses/${encodeURIComponent(slug)}`),
-  lesson: (slug: string) => request<CourseContent["modules"][number]["lessons"][number]>(`/lessons/${encodeURIComponent(slug)}`),
-  progress: () => request<ProgressSummary>("/progress/me"),
-  updateLessonProgress: (lessonId: string, data: { status: "in_progress" | "completed"; time_spent_seconds: number }) => request<ProgressSummary>(`/progress/lessons/${encodeURIComponent(lessonId)}`, { method: "PUT", body: JSON.stringify(data) }),
-  finalQuiz: () => request<QuizContent>("/quizzes/final"),
-  submitFinalQuiz: (answers: Array<{ question_id: string; selected_option_id: string }>) => request<QuizSubmission>("/quizzes/final/attempts", { method: "POST", body: JSON.stringify({ answers }) }),
-  discussionChannels: () => request<ForumChannel[]>("/forum/channels"),
-  discussionPosts: (channel: string) => request<ForumPost[]>(`/forum/channels/${encodeURIComponent(channel)}/posts`),
-  sendDiscussionPost: (channel: string, body: string) => request<ForumPost>(`/forum/channels/${encodeURIComponent(channel)}/posts`, { method: "POST", body: JSON.stringify({ body }) }),
-  groupTask: () => request<GroupTask>("/group-task"),
-  saveGroupTask: (content: { steps: string[]; reflection?: string }) => request<GroupTask>("/group-task", { method: "PUT", body: JSON.stringify(content) }),
+  signIn: (email: string, password: string) => request<{ user: UserProfile; message: string }>("/session/start", { method: "POST", body: JSON.stringify({ email, password }) }),
+  signUp: (data: { email: string; full_name: string; password: string; confirm_password: string }) => request<{ user: UserProfile; message: string }>("/session/register", { method: "POST", body: JSON.stringify(data) }),
+  signOut: () => request<{ message: string }>("/session/end", { method: "POST" }),
+  me: () => request<UserProfile>("/session/current"),
+  updateProfile: (data: { full_name: string; bio: string | null; locale: string }) => request<UserProfile>("/account", { method: "PATCH", body: JSON.stringify(data) }),
+  courses: () => request<CourseContent[]>("/learning/catalog"),
+  course: (slug: string) => request<CourseContent>(`/learning/catalog/${encodeURIComponent(slug)}`),
+  lesson: (slug: string) => request<CourseContent["modules"][number]["lessons"][number]>(`/learning/lessons/${encodeURIComponent(slug)}`),
+  progress: () => request<ProgressSummary>("/learning/progress"),
+  updateLessonProgress: (lessonId: string, data: { status: "in_progress" | "completed"; time_spent_seconds: number }) => request<ProgressSummary>(`/learning/progress/lessons/${encodeURIComponent(lessonId)}`, { method: "PUT", body: JSON.stringify(data) }),
+  finalQuiz: () => request<QuizContent>("/learning/assessment"),
+  submitFinalQuiz: (answers: Array<{ question_id: string; selected_option_id: string }>) => request<QuizSubmission>("/learning/assessment/attempts", { method: "POST", body: JSON.stringify({ answers }) }),
+  discussionChannels: () => request<ForumChannel[]>("/community/channels"),
+  discussionPosts: (channel: string) => request<ForumPost[]>(`/community/channels/${encodeURIComponent(channel)}/posts`),
+  sendDiscussionPost: (channel: string, body: string) => request<ForumPost>(`/community/channels/${encodeURIComponent(channel)}/posts`, { method: "POST", body: JSON.stringify({ body }) }),
+  groupTask: () => request<GroupTask>("/learning/team-checklist"),
+  saveGroupTask: (content: { steps: string[]; reflection?: string }) => request<GroupTask>("/learning/team-checklist", { method: "PUT", body: JSON.stringify(content) }),
 };

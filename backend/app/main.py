@@ -47,7 +47,7 @@ app.add_middleware(
     max_age=600,
     same_site="lax",
     https_only=settings.cookie_secure,
-    path="/api/v1/auth/google",
+    path="/api/identity/google",
 )
 app.add_middleware(
     CORSMiddleware,

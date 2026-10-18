@@ -42,8 +42,8 @@ def serialize_user(db: Session, user: User) -> UserRead:
 
 def set_auth_cookies(response: Response, access: str, refresh: str) -> None:
     common = {"httponly": True, "secure": settings.cookie_secure, "samesite": "lax"}
-    response.set_cookie("cybersmart_access", access, max_age=settings.access_token_minutes * 60, path="/api/v1", **common)
-    response.set_cookie("cybersmart_refresh", refresh, max_age=settings.refresh_token_days * 86400, path="/api/v1/auth", **common)
+    response.set_cookie("cybersmart_access", access, max_age=settings.access_token_minutes * 60, path="/api", **common)
+    response.set_cookie("cybersmart_refresh", refresh, max_age=settings.refresh_token_days * 86400, path="/api/session", **common)
 
 
 @router.get("/google/login", name="google_login")
@@ -120,8 +120,8 @@ def refresh(request: Request, response: Response, db: Session = Depends(get_db))
 
 
 def clear_auth_cookies(response: Response) -> None:
-    response.delete_cookie("cybersmart_access", path="/api/v1", secure=settings.cookie_secure, httponly=True, samesite="lax")
-    response.delete_cookie("cybersmart_refresh", path="/api/v1/auth", secure=settings.cookie_secure, httponly=True, samesite="lax")
+    response.delete_cookie("cybersmart_access", path="/api", secure=settings.cookie_secure, httponly=True, samesite="lax")
+    response.delete_cookie("cybersmart_refresh", path="/api/session", secure=settings.cookie_secure, httponly=True, samesite="lax")
 
 
 @router.post("/logout")

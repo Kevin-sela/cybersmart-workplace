@@ -8,7 +8,7 @@ The frontend is deployed to Vercel from the `frontend/` directory. The FastAPI A
 2. Add `BACKEND_API_ORIGIN` to the Production and Preview environments. Set it to the Render web service URL, without a trailing slash, such as `https://cybersmart-workplace-api.onrender.com`.
 3. Deploy and copy the Vercel production URL.
 
-The Next.js rewrite proxies `/api/v1/*` through the Vercel origin. This lets the browser use the same origin for API requests and authentication cookies.
+The browser calls frontend-owned `/api/*` aliases. Next.js rewrites those paths to FastAPI on the server, keeping the backend's route paths and host out of browser requests while retaining same-origin authentication cookies.
 
 ## Render
 
@@ -26,7 +26,7 @@ The Blueprint uses Render's free web service and free PostgreSQL plan to avoid s
 Create a Google OAuth web client and configure its authorized redirect URI as:
 
 ```text
-https://<your-vercel-domain>/api/v1/auth/google/callback
+https://<your-vercel-domain>/api/identity/google/callback
 ```
 
 Set these Render environment variables:
@@ -35,8 +35,8 @@ Set these Render environment variables:
 - `GOOGLE_REDIRECT_URI` to the exact callback URI above.
 - `FRONTEND_ORIGIN` and `CORS_ORIGINS` to the Vercel production origin.
 
-The callback goes through Vercel's `/api/v1/*` rewrite to Render. The browser therefore receives the OAuth session and authentication cookies on the Vercel domain. Keep the Google client secret, Render database URL, and JWT secret in provider environment settings only.
+The callback goes through Vercel's `/api/identity/google/callback` alias to Render. The browser therefore receives the OAuth session and authentication cookies on the Vercel domain. Keep the Google client secret, Render database URL, and JWT secret in provider environment settings only.
 
 ## Local setup
 
-In `frontend/.env.local`, set `BACKEND_API_ORIGIN=http://127.0.0.1:8000`. For local Google sign-in, use `http://localhost:3000/api/v1/auth/google/callback` as the authorized redirect URI and set the matching `GOOGLE_REDIRECT_URI` and `FRONTEND_ORIGIN` in `backend/.env`.
+In `frontend/.env.local`, set `BACKEND_API_ORIGIN=http://127.0.0.1:8000`. For local Google sign-in, use `http://localhost:3000/api/identity/google/callback` as the authorized redirect URI and set the matching `GOOGLE_REDIRECT_URI` and `FRONTEND_ORIGIN` in `backend/.env`.
