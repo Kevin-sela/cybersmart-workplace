@@ -1132,3 +1132,111 @@ small { font-size: 13px; }
 .course-video-card-4 .course-video-thumbnail { background:radial-gradient(circle at 78% 22%,rgb(233 196 106 / 31%),transparent 27%),linear-gradient(135deg,var(--brand-royal),var(--brand-nav) 70%); }
 @media(max-width:600px) { .course-video-section { margin:24px 0; } .course-video-section-heading { align-items:flex-start; flex-direction:column; gap:8px; } .course-video-coming { margin:0; } .course-video-thumb-label { top:9px; left:10px; font-size:8px; } .course-video-art-window { min-width:145px; } .course-video-art-icon { width:44px; height:44px; } .course-video-art-icon svg { width:26px; height:26px; } .course-video-play { width:40px; height:40px; } .course-video-copy { padding:12px; } }
 
+/* Shared responsive foundations for every signed-in learning screen. */
+.dashboard-page,.dashboard-main,.detail-page,.overview-main,.forum-page { min-width:0; }
+.dashboard-page { overflow-x:clip; }
+.dashboard-main>* { min-width:0; }
+.dashboard-breadcrumb { min-width:0; flex-wrap:wrap; }
+.dashboard-welcome>div { min-width:0; }
+.dashboard-welcome h1,.overview-section-heading h2 { overflow-wrap:anywhere; }
+.module-detail-layout { display:grid; grid-template-columns:minmax(0,1fr) minmax(220px,.42fr); align-items:start; gap:16px; }
+.module-detail-card { padding:20px; }
+.module-detail-heading>div { display:flex; align-items:center; gap:12px; }
+.module-detail-heading .dashboard-eyebrow { margin:0 0 3px; }
+.module-detail-heading h2 { margin:0; color:var(--brand-nav); font-size:20px; }
+.module-detail-icon { display:grid; width:44px; height:44px; flex:none; place-items:center; border-radius:12px; background:var(--mist); color:var(--brand-ocean); font:700 15px var(--font-heading); }
+.module-detail-outcome { margin:18px 0; color:var(--ink); font-size:15px; line-height:1.65; }
+.module-detail-points { display:grid; gap:9px; margin:0; padding:0; list-style:none; }
+.module-detail-points li { display:flex; align-items:flex-start; gap:10px; color:var(--muted); font-size:13px; line-height:1.55; }
+.module-detail-points li>span { display:grid; width:21px; height:21px; flex:none; place-items:center; border-radius:50%; background:var(--mist); color:var(--brand-ocean); font-size:12px; font-weight:700; }
+.module-detail-status { display:grid; gap:3px; margin-top:20px; padding:13px 14px; border-left:3px solid var(--brand-gold); background:var(--canvas); color:var(--muted); font-size:12px; line-height:1.5; }
+.module-detail-status strong { color:var(--brand-nav); }
+.module-detail-action { margin-top:16px; }
+.module-detail-aside { display:grid; gap:12px; min-width:0; }
+.module-detail-meta { padding:16px; }
+.module-detail-meta h2 { margin:0; color:var(--brand-nav); font-size:16px; }
+.module-detail-meta>p:not(.dashboard-eyebrow) { color:var(--muted); font-size:13px; }
+.module-detail-back { color:var(--brand-ocean); font-size:12px; font-weight:600; text-decoration:none; }
+.module-detail-back:hover { text-decoration:underline; }
+.quiz-intro { max-width:760px; color:var(--muted); }
+.settings-preferences { max-width:680px; padding:20px; }
+.settings-preferences h2 { margin:0; color:var(--brand-nav); font-size:18px; }
+.settings-preferences>p { color:var(--muted); }
+.settings-preferences label { display:flex; min-height:56px; align-items:center; justify-content:space-between; gap:16px; padding:12px 0; border-top:1px solid var(--lav); }
+.settings-preferences label span { display:grid; gap:3px; }
+.settings-preferences label strong { color:var(--brand-nav); font-size:14px; }
+.settings-preferences label small,.settings-note { color:var(--muted); font-size:12px; }
+.settings-preferences input { width:20px; height:20px; flex:none; accent-color:var(--brand-jade); }
+
+@media(max-width:700px) {
+  .module-detail-layout { grid-template-columns:minmax(0,1fr); gap:12px; }
+  .module-detail-aside { grid-template-columns:minmax(0,1fr); }
+  .module-detail-card,.settings-preferences { padding:16px; }
+  .quiz-intro { margin-top:0; }
+  .quiz-submit-button { width:100%; min-height:46px; }
+  .forum-workspace { min-height:calc(100dvh - 145px); }
+  .forum-chat-panel { min-height:max(430px,calc(100dvh - 208px)); }
+  .forum-composer textarea { min-height:44px; font-size:16px; }
+}
+@media(max-width:520px) {
+  .dashboard-header-inner { width:calc(100% - 24px); gap:7px; }
+  .dashboard-brand { min-width:0; gap:5px; font-size:11px; }
+  .dashboard-brand small { display:none; }
+  .dashboard-header-actions { gap:2px; }
+  .dashboard-user-pill { flex:none; }
+  .dashboard-return-link { max-width:38px; overflow:hidden; }
+  .dashboard-breadcrumb { gap:6px; font-size:11px; }
+  .dashboard-breadcrumb .ui-badge { margin-left:0; }
+  .detail-welcome { gap:10px; }
+  .detail-welcome .dashboard-cta { width:100%; }
+  .overview-section-heading { gap:8px; }
+  .overview-section-heading>.overview-text-link { flex:none; }
+  .latest-quiz-strip { min-width:0; }
+  .latest-strip-detail { min-width:0; gap:6px; padding:0 7px; }
+  .latest-strip-detail strong { font-size:11px; }
+  .detail-chart-card .detail-donut-content { min-height:190px; }
+  .detail-chart-card .progress-donut { width:min(178px,58vw); }
+  .forum-page { width:calc(100% - 20px); }
+  .forum-workspace { border-radius:8px; }
+  .forum-chat-header { padding-right:10px; padding-left:10px; }
+  .forum-chat-header>div { min-width:0; }
+  .forum-chat-header p { overflow:hidden; max-width:55vw; text-overflow:ellipsis; white-space:nowrap; }
+  .forum-composer-footer>span { font-size:10px; }
+  .course-video-text h3 { font-size:16px; }
+  .module-detail-action { width:100%; }
+}
+@media(max-width:380px) {
+  .dashboard-header-inner { gap:5px; }
+  .dashboard-menu-button { width:34px; height:34px; }
+  .dashboard-brand { font-size:10px; }
+  .dashboard-brand .dashboard-mark { width:20px; height:22px; }
+  .dashboard-user-name,.dashboard-user-pill .user-chevron { display:none; }
+  .dashboard-user-pill { width:31px; height:31px; justify-content:center; padding:2px; }
+  .dashboard-notification-button { width:28px; height:30px; }
+  .dashboard-notification-popover { right:-36px; width:min(230px,calc(100vw - 24px)); }
+  .overview-milestones li { min-width:0; }
+  .milestone-label { overflow-wrap:anywhere; }
+  .progress-skills-content { grid-template-columns:88px minmax(0,1fr); gap:7px; }
+  .progress-skills-content .progress-donut { width:84px; }
+  .summary-skills { padding-left:8px; }
+  .summary-skills li>div,.summary-skills li strong { font-size:8px; }
+  .overview-course-list { grid-template-columns:minmax(0,1fr); }
+  .daily-practice-panel .practice-option { min-height:42px; font-size:12px; }
+  .quiz-question-card,.task-checklist-card,.forum-thread-card { padding:13px; }
+  .quiz-answer-list button { min-height:48px; padding:8px; font-size:12px; }
+  .detail-stat-card .ui-card-title { font-size:25px; }
+  .module-detail-heading>div { align-items:flex-start; }
+  .module-detail-heading h2 { font-size:18px; }
+  .forum-message-list { padding-right:9px; padding-left:9px; }
+  .forum-composer { margin-right:7px; margin-left:7px; }
+}
+@media(max-width:700px) {
+  .dashboard-sidebar { padding-bottom:max(16px,env(safe-area-inset-bottom)); }
+  .dashboard-main { padding-bottom:max(24px,env(safe-area-inset-bottom)); }
+  .forum-composer { margin-bottom:max(9px,env(safe-area-inset-bottom)); }
+}
+@media(hover:none) and (pointer:coarse) {
+  .dashboard-sidebar-link,.menu-item,.forum-channel-button,.quiz-answer-list button,.task-checklist label { min-height:44px; }
+  .dashboard-menu-button,.dashboard-notification-button,.forum-composer-footer button { min-width:44px; min-height:44px; }
+}
+
