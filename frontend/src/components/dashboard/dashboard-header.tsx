@@ -260,7 +260,7 @@ export function DashboardHeader({ active }: DashboardHeaderProps) {
             {userLoading ? (
               <span className="h-9 w-9 animate-pulse rounded-full bg-muted" aria-label="Loading account" />
             ) : (
-              <ProfileChip name={user?.full_name ?? "Sign in"} badge={user ? `${user.role[0].toUpperCase()}${user.role.slice(1)}` : "Guest"} />
+              <ProfileChip className="dashboard-profile-chip" name={user?.full_name ?? "Sign in"} badge={user ? `${user.role[0].toUpperCase()}${user.role.slice(1)}` : "Guest"} />
             )}
           </div>
         </div>

@@ -1655,3 +1655,57 @@ small { font-size: 13px; }
   .forum-composer-footer { align-items:flex-end; }
 }
 
+/* Compact, balanced dashboard header and summary cards on small phones. */
+@media(max-width:520px) {
+  .dashboard-header-inner { position:relative; grid-template-columns:auto minmax(38px,1fr) auto; grid-template-areas:"brand search actions"; gap:7px; width:calc(100% - 20px); }
+  .dashboard-header-left { gap:5px; }
+  .dashboard-brand>div { display:none; }
+  .dashboard-brand .dashboard-mark { width:24px; height:27px; }
+  .dashboard-menu-button { width:38px; height:38px; }
+  .dashboard-header-actions { gap:4px; }
+  .dashboard-header-actions>.relative>button { width:38px; height:38px; }
+  .dashboard-header-actions .dashboard-profile-chip { width:38px; min-width:38px; min-height:38px; justify-content:center; gap:0; padding:3px; }
+  .dashboard-header-actions .dashboard-profile-chip .profile-chip-avatar { width:30px; height:30px; }
+  .dashboard-header-actions .dashboard-profile-chip .account-profile-chip-copy,.dashboard-header-actions .dashboard-profile-chip .account-profile-chip-chevron { display:none; }
+  .dashboard-search-wrap { min-width:38px; }
+  .dashboard-search { width:38px; min-height:38px; justify-content:center; padding:0; border-color:transparent; background:transparent; }
+  .dashboard-search-icon { width:19px; height:19px; }
+  .dashboard-search input { width:0; padding:0; }
+  .dashboard-search input::placeholder { color:transparent; }
+  .dashboard-search-wrap:focus-within { position:absolute; z-index:70; inset:calc(100% + 5px) 0 auto; width:auto; min-width:0; padding:6px; border:1px solid var(--line); border-radius:9px; background:var(--white); box-shadow:0 10px 25px rgb(32 37 43 / 14%); }
+  .dashboard-search-wrap:focus-within .dashboard-search { width:100%; justify-content:flex-start; border-color:var(--brand-ocean); background:var(--white); }
+  .dashboard-search-wrap:focus-within .dashboard-search input { width:100%; padding:0; }
+  .dashboard-search-wrap:focus-within .dashboard-search input::placeholder { color:var(--slate-grey); }
+
+  .dashboard-learning-summary { grid-template-columns:minmax(0,1fr); gap:11px; margin-top:12px; }
+  .dashboard-progress-card,.dashboard-next-card { min-width:0; border-radius:12px; }
+  .dashboard-progress-card>.ui-card-header { padding:14px 14px 7px; }
+  .dashboard-progress-card>.ui-card-content { padding:0 14px 14px; }
+  .dashboard-progress-card .dashboard-progress-body { display:grid; grid-template-columns:minmax(86px,96px) minmax(0,1fr); align-items:center; gap:12px; }
+  .dashboard-progress-card .progress-donut { width:min(96px,27vw); margin:0; }
+  .dashboard-progress-card .progress-donut-center strong { font-size:23px; }
+  .dashboard-progress-stats { min-width:0; gap:8px; }
+  .dashboard-progress-stat { min-width:0; gap:8px; padding:8px; border-radius:9px; }
+  .dashboard-progress-stat>div:first-child { width:32px; height:32px; flex:none; }
+  .dashboard-progress-stat>div:last-child { min-width:0; }
+  .dashboard-progress-stat>div:last-child p:first-child { font-size:19px; line-height:1.15; white-space:nowrap; }
+  .dashboard-progress-stat>div:last-child p:last-child { font-size:10px; line-height:1.3; }
+  .dashboard-next-card>.ui-card-header { padding:14px 15px 7px; }
+  .dashboard-next-content { height:auto; min-height:0; justify-content:flex-start; padding:0 15px 15px; }
+  .dashboard-next-content h3 { font-size:19px; line-height:1.3; overflow-wrap:anywhere; }
+  .dashboard-next-content>p { margin-top:7px; font-size:13px; line-height:1.5; }
+  .dashboard-next-action { min-height:44px; margin-top:12px; align-self:flex-start; padding-inline:14px; }
+}
+
+@media(max-width:360px) {
+  .dashboard-header-inner { grid-template-columns:auto minmax(34px,1fr) auto; gap:4px; width:calc(100% - 16px); }
+  .dashboard-header-left { gap:4px; }
+  .dashboard-menu-button,.dashboard-header-actions>.relative>button,.dashboard-header-actions .dashboard-profile-chip,.dashboard-search { width:35px; min-width:35px; min-height:36px; height:36px; }
+  .dashboard-header-actions .dashboard-profile-chip .profile-chip-avatar { width:28px; height:28px; }
+  .dashboard-progress-card .dashboard-progress-body { grid-template-columns:82px minmax(0,1fr); gap:9px; }
+  .dashboard-progress-card .progress-donut { width:82px; }
+  .dashboard-progress-stat { padding:7px; }
+  .dashboard-progress-stat>div:first-child { width:29px; height:29px; }
+  .dashboard-progress-stat>div:last-child p:first-child { font-size:17px; }
+}
+

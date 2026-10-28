@@ -42,8 +42,8 @@ export function LearningOverviewSummary({
   loading: boolean;
 }) {
   return (
-    <section className="mt-6 grid gap-4 lg:grid-cols-[1.45fr_0.8fr]" aria-label="Learning progress overview">
-      <Card className="border-border/80 bg-card/95 shadow-sm">
+    <section className="dashboard-learning-summary mt-6 grid gap-4 lg:grid-cols-[1.45fr_0.8fr]" aria-label="Learning progress overview">
+      <Card className="dashboard-progress-card border-border/80 bg-card/95 shadow-sm">
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between gap-3">
             <CardTitle>Your progress</CardTitle>
@@ -51,11 +51,11 @@ export function LearningOverviewSummary({
           </div>
         </CardHeader>
         <CardContent className="pt-0">
-          <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
+          <div className="dashboard-progress-body flex flex-col gap-5 sm:flex-row sm:items-center">
             <ProgressDonut value={progress} completedUnits={completedActivities} totalUnits={totalActivities} unitLabel="activities" showModuleCount={false} />
 
-            <div className="flex flex-1 flex-col gap-3">
-              <div className="flex items-center gap-3 rounded-xl border border-border bg-muted/40 p-3">
+            <div className="dashboard-progress-stats flex flex-1 flex-col gap-3">
+              <div className="dashboard-progress-stat flex items-center gap-3 rounded-xl border border-border bg-muted/40 p-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
                   <SummaryIcon kind="book" />
                 </div>
@@ -67,7 +67,7 @@ export function LearningOverviewSummary({
                 </div>
               </div>
 
-              <div className="flex items-center gap-3 rounded-xl border border-border bg-muted/40 p-3">
+              <div className="dashboard-progress-stat flex items-center gap-3 rounded-xl border border-border bg-muted/40 p-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-success/10 text-success">
                   <SummaryIcon kind="clock" />
                 </div>
@@ -83,13 +83,13 @@ export function LearningOverviewSummary({
         </CardContent>
       </Card>
 
-      <Card className="border-border/80 bg-card/95 shadow-sm">
+      <Card className="dashboard-next-card border-border/80 bg-card/95 shadow-sm">
         <CardHeader className="pb-3">
           <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
             {loading ? "Loading activity" : nextLesson ? `Next lesson · Week ${nextLesson.week}` : "Next step"}
           </p>
         </CardHeader>
-        <CardContent className="flex h-full flex-col justify-center pt-0">
+        <CardContent className="dashboard-next-content flex h-full flex-col justify-center pt-0">
           <h3 className="text-2xl font-bold tracking-tight text-foreground">
             {loading ? "Preparing…" : nextLesson ? nextLesson.title : "Course complete"}
           </h3>
@@ -103,7 +103,7 @@ export function LearningOverviewSummary({
 
           <Link
             href="/dashboard/modules"
-            className="mt-5 inline-flex items-center gap-2 self-start rounded-md bg-primary px-3.5 py-2 text-sm font-medium text-primary-foreground no-underline hover:bg-primary/90"
+            className="dashboard-next-action mt-5 inline-flex items-center gap-2 self-start rounded-md bg-primary px-3.5 py-2 text-sm font-medium text-primary-foreground no-underline hover:bg-primary/90"
           >
             View path
             <ArrowRight className="h-4 w-4" />
