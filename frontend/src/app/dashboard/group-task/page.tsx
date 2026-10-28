@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { DashboardHeader } from "@/components/dashboard/dashboard-header";
 import { Card } from "@/components/ui/card";
 import { api, GroupTask } from "@/services/api";
+import { Button } from "@/components/ui/button";
 
 export default function GroupTaskPage() {
   const [task, setTask] = useState<GroupTask | null>(null);
@@ -27,7 +28,7 @@ export default function GroupTaskPage() {
     <Card className="overview-panel task-checklist-card"><div className="overview-panel-heading"><div><h2>Our safe response</h2><p>Select the steps you would include in your team checklist.</p></div><span>{checked.length} of {task?.steps.length ?? 0}</span></div>
       {!task && !error ? <p aria-live="polite">Loading activity…</p> : <div className="task-checklist">{(task?.steps ?? []).map((step) => <label key={step}><input type="checkbox" checked={checked.includes(step)} onChange={() => toggle(step)} /><span>{step}</span></label>)}</div>}
       <p className="task-checklist-note" aria-live="polite">{message || (checked.length === (task?.steps.length ?? 0) && task ? "Checklist complete. Save your response when you are ready." : "Your selection is saved to your learner account when you submit it.")}</p>
-      {task && <button className="dashboard-cta quiz-submit-button" type="button" onClick={save} disabled={busy || checked.length === 0}>{busy ? "Saving…" : "Save checklist"}</button>}
+      {task && <Button className="dashboard-cta quiz-submit-button" type="button" onClick={save} disabled={busy || checked.length === 0}>{busy ? "Saving…" : "Save checklist"}</Button>}
     </Card><Link className="discussion-action" href="/dashboard">Back to overview</Link>
   </main></div>;
 }

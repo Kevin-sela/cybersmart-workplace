@@ -3,12 +3,11 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import { Bell, ChevronDown, Home, MessageSquareText, Settings, ShieldCheck, Sparkles, UserCircle2 } from "lucide-react";
+import { Bell, Home, MessageSquareText, Settings, ShieldCheck, Sparkles, UserCircle2 } from "lucide-react";
 
 import { api, UserProfile } from "@/services/api";
 import { enablePushNotifications, isPushEnabled, loadOneSignal } from "./push-notifications";
 import { ProfileChip } from "@/components/account/profile-chip";
-import { Button } from "@/components/ui/button";
 
 
 type DashboardHeaderProps = { active?: "overview" | "modules" | "progress" };

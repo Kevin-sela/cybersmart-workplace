@@ -8,6 +8,7 @@ import { DashboardHeader } from "@/components/dashboard/dashboard-header";
 import { ProgressDonut } from "@/components/dashboard/progress-donut";
 import { COURSE_MODULES, LESSON_PROGRESS_KEY } from "@/lib/course";
 import { api, ProgressSummary } from "@/services/api";
+import { Button } from "@/components/ui/button";
 
 export default function ProgressPage() {
   const [completed, setCompleted] = useState(false);
@@ -43,7 +44,7 @@ export default function ProgressPage() {
         <div className="dashboard-breadcrumb"><Link href="/dashboard">My learning</Link><span aria-hidden="true">/</span><strong>Progress</strong><Badge variant="muted">Course preview</Badge></div>
         <section className="dashboard-welcome detail-welcome">
           <div><p className="dashboard-eyebrow">YOUR COURSE</p><h1>Progress and achievements</h1><p>Review your completed modules and pick up where you left off.</p></div>
-          <Link className="dashboard-cta" href={progressLoading ? "/dashboard/progress" : completed ? "/dashboard/modules" : "/learn/first-steps"} aria-disabled={progressLoading}>{progressLoading ? "Checking progress…" : completed ? "Browse modules" : "Start first lesson"}<span aria-hidden="true">→</span></Link>
+          <Button asChild className="dashboard-cta"><Link href={progressLoading ? "/dashboard/progress" : completed ? "/dashboard/modules" : "/learn/first-steps"} aria-disabled={progressLoading}>{progressLoading ? "Checking progress…" : completed ? "Browse modules" : "Start first lesson"}<span aria-hidden="true">→</span></Link></Button>
         </section>
         <div className="detail-stat-row">
           <Card className="detail-stat-card"><CardHeader><CardDescription>OVERALL PROGRESS</CardDescription><CardTitle>{progressLoading ? "—" : progress + "%"}</CardTitle></CardHeader><CardContent><p>Lessons and passed knowledge checks</p></CardContent></Card>

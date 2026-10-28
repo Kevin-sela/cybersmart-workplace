@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { DashboardHeader } from "@/components/dashboard/dashboard-header";
 import { Card } from "@/components/ui/card";
 import { api, QuizContent, QuizSubmission } from "@/services/api";
+import { Button } from "@/components/ui/button";
 
 export default function QuizPage() {
   const [quiz, setQuiz] = useState<QuizContent | null>(null);
@@ -36,7 +37,7 @@ export default function QuizPage() {
           {feedback && <div className={`quiz-explanation ${feedback.is_correct ? "quiz-explanation-correct" : ""}`} aria-live="polite"><strong>{feedback.is_correct ? "Correct." : "Review this choice."}</strong><p>{feedback.explanation}</p></div>}
         </Card>;
       })}
-      {result ? <Card className="overview-panel quiz-question-card" role="status"><h2>{result.passed ? "Knowledge check passed" : "Keep practising"}</h2><p>You scored {result.score_percent}% ({result.correct_count} of {result.total_questions}). Passing score: {result.pass_mark_percent}%.</p></Card> : <button className="dashboard-cta quiz-submit-button" type="button" disabled={busy || Object.keys(selected).length !== quiz.questions.length} onClick={submit}>{busy ? "Submitting…" : "Submit answers"}</button>}
+      {result ? <Card className="overview-panel quiz-question-card" role="status"><h2>{result.passed ? "Knowledge check passed" : "Keep practising"}</h2><p>You scored {result.score_percent}% ({result.correct_count} of {result.total_questions}). Passing score: {result.pass_mark_percent}%.</p></Card> : <Button className="dashboard-cta quiz-submit-button" type="button" disabled={busy || Object.keys(selected).length !== quiz.questions.length} onClick={submit}>{busy ? "Submitting…" : "Submit answers"}</Button>}
     </>}
     <Link className="discussion-action" href="/dashboard">Back to overview</Link>
   </main></div>;

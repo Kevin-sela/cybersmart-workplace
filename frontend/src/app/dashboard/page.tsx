@@ -7,6 +7,7 @@ import { DashboardHeader } from "@/components/dashboard/dashboard-header";
 import { LatestQuizSummary, LearningOverviewSummary, OverviewPractice } from "@/components/dashboard/overview-practice";
 import { COURSE_MODULES, LESSON_PROGRESS_KEY } from "@/lib/course";
 import { api, ProgressSummary, UserProfile } from "@/services/api";
+import { Progress as ShadcnProgress } from "@/components/ui/progress";
 
 export default function DashboardPage() {
   const [completed, setCompleted] = useState(false);
@@ -86,7 +87,6 @@ export default function DashboardPage() {
       <div className="overview-section-heading course-cards-heading"><div><h2>Course modules</h2><p>Four short modules for safer work.</p></div></div>
       <div className="module-page-list overview-course-list">
         {COURSE_MODULES.map((module) => {
-          const available = module.week === 1;
           const moduleItems = apiProgress?.items.filter(item => item.module_week === module.week) ?? [];
           const moduleLessonsTotal = apiProgress ? moduleItems.length : progressLoading ? 0 : 1;
           const moduleLessonsCompleted = apiProgress ? moduleItems.filter(item => item.status === "completed").length : (module.week === 1 && localCompleted ? 1 : 0);
@@ -95,7 +95,7 @@ export default function DashboardPage() {
           const content = <Card className={`module-overview-card module-overview-card-${module.week}`}>
             <div className="module-overview-main"><span className="module-overview-number">{String(module.week).padStart(2, "0")}</span><span className="module-overview-divider"/><div className="module-overview-copy"><CardTitle>{module.title}</CardTitle>{isComplete && <span className="module-overview-complete">Complete</span>}</div></div>
             <CardDescription>{module.detail}</CardDescription>
-            <CardContent className="module-overview-progress"><strong>{progressLoading ? "—" : moduleLessonsCompleted + " / " + moduleLessonsTotal}</strong><span className="module-overview-track" role="progressbar" aria-label={module.title + " lesson progress"} aria-valuenow={moduleProgress} aria-valuemin={0} aria-valuemax={100}><i style={{width: moduleProgress + "%"}}/></span></CardContent>
+            <CardContent className="module-overview-progress"><strong>{progressLoading ? "—" : moduleLessonsCompleted + " / " + moduleLessonsTotal}</strong><ShadcnProgress className="module-overview-track" value={moduleProgress} label={module.title + " lesson progress"} /></CardContent>
           </Card>;
           const href = module.href ?? `/dashboard/modules/${module.week}`;
           return <Link className="module-page-link" href={href} key={module.week} aria-label={`${isComplete ? "Review" : "Open"} ${module.title}`}>{content}</Link>;

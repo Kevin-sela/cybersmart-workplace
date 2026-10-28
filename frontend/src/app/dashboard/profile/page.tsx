@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { DashboardHeader } from "@/components/dashboard/dashboard-header";
 import { ProfileAvatar } from "@/components/account/profile-chip";
 import { api, ProgressSummary, UserProfile } from "@/services/api";
+import { Button } from "@/components/ui/button";
+import { Progress as ShadcnProgress } from "@/components/ui/progress";
 
 function accountDate(value: string | null | undefined): string {
   if (!value) return "Not available";
@@ -57,35 +59,35 @@ export default function ProfilePage() {
 
   return <div className="dashboard-page">
     <DashboardHeader />
-    <main className="dashboard-main detail-page profile-settings-page">
+    <main className="dashboard-main detail-page profile-settings-page !mx-auto !w-full !max-w-[1080px] !px-5 !pt-[34px] text-[#202123]">
       <header className="profile-settings-heading"><p className="account-eyebrow">ACCOUNT SETTINGS</p><h1>Profile</h1><p>Manage your identity, preferences, and learning details.</p></header>
       {!user && !error && <section className="profile-settings-loading" aria-live="polite">Loading your profile…</section>}
       {error && !user && <section className="profile-settings-loading"><p role="alert">{error}</p><a href="/sign-in?next=%2Fdashboard%2Fprofile">Sign in</a></section>}
-      {user && <div className="profile-settings-layout">
-        <aside className="profile-settings-rail" aria-label="Profile overview">
+      {user && <div className="profile-settings-layout grid items-start gap-[22px] pt-[22px] lg:grid-cols-[minmax(220px,250px)_minmax(0,1fr)]">
+        <aside className="profile-settings-rail lg:sticky lg:top-[86px]" aria-label="Profile overview">
           <div className="profile-rail-label">YOUR ACCOUNT</div>
           <div className="profile-rail-identity"><ProfileAvatar name={user.full_name} status className="profile-rail-avatar"/><h2>{user.full_name}</h2><p>{user.email}</p><span className="profile-rail-role">{user.role}</span></div>
           <nav className="profile-settings-nav" aria-label="Profile settings navigation"><a href="#personal-info" className="profile-settings-nav-active">Personal info</a><a href="#preferences">Preferences</a><a href="#account-details">Account details</a><a href="#learning-progress">Learning progress</a></nav>
           <section className="profile-rail-progress" id="learning-progress" aria-labelledby="profile-progress-title">
             <div className="profile-rail-progress-heading"><span id="profile-progress-title">Learning progress</span><strong>{progress ? `${progressPercent}%` : "—"}</strong></div>
-            <div className="profile-progress-track" role="progressbar" aria-label="Course completion" aria-valuenow={progressPercent} aria-valuemin={0} aria-valuemax={100}><span style={{ width: `${progressPercent}%` }}/></div>
+            <ShadcnProgress className="profile-progress-track" value={progressPercent} label="Course completion" />
             <p>{progress ? `${progress.completed_lessons} of ${progress.total_lessons} lessons completed` : "Your course progress will appear here."}</p>
           </section>
           <span className="profile-rail-footnote">Your profile is private to your account.</span>
         </aside>
 
-        <div className="profile-settings-main">
-          <form onSubmit={save} className="profile-settings-form">
-            <section className="profile-settings-section" id="personal-info"><div className="profile-section-copy"><span className="profile-section-eyebrow">PROFILE</span><h2>Personal info</h2><p>Choose how your name appears across your learning space.</p></div>
-              <div className="profile-fields"><label>Full name<input name="full_name" defaultValue={user.full_name} minLength={2} maxLength={120} required autoComplete="name"/></label><label>About you<textarea name="bio" defaultValue={user.bio ?? ""} maxLength={280} rows={4} placeholder="Share a little about your learning goals"/><small>Up to 280 characters. This helps personalise your learner profile.</small></label></div>
+          <div className="profile-settings-main min-w-0">
+          <form onSubmit={save} className="profile-settings-form grid gap-[13px]">
+            <section className="profile-settings-section grid grid-cols-1 gap-4 border-b border-[#e5e5e5] p-4 md:grid-cols-[minmax(190px,.8fr)_minmax(280px,1.2fr)] md:gap-7 md:p-5" id="personal-info"><div className="profile-section-copy"><span className="profile-section-eyebrow">PROFILE</span><h2>Personal info</h2><p>Choose how your name appears across your learning space.</p></div>
+              <div className="profile-fields grid gap-4"><label className="grid gap-1.5">Full name<input name="full_name" defaultValue={user.full_name} minLength={2} maxLength={120} required autoComplete="name"/></label><label className="grid gap-1.5">About you<textarea name="bio" defaultValue={user.bio ?? ""} maxLength={280} rows={4} placeholder="Share a little about your learning goals"/><small>Up to 280 characters. This helps personalise your learner profile.</small></label></div>
             </section>
-            <section className="profile-settings-section" id="preferences"><div className="profile-section-copy"><span className="profile-section-eyebrow">PREFERENCES</span><h2>Language</h2><p>Set the language code for your learning experience.</p></div><div className="profile-fields"><label>Language or locale<input name="locale" defaultValue={user.locale} minLength={2} maxLength={16} placeholder="en"/><small>For example, en, en-GB, or fr.</small></label></div></section>
-            <div className="profile-settings-actions">{error && <p className="account-error" role="alert">{error}</p>}{message && <p className="account-success" role="status">{message}</p>}<button type="submit" disabled={busy}>{busy ? "Saving…" : "Save changes"}</button></div>
+            <section className="profile-settings-section grid grid-cols-1 gap-4 border-b border-[#e5e5e5] p-4 md:grid-cols-[minmax(190px,.8fr)_minmax(280px,1.2fr)] md:gap-7 md:p-5" id="preferences"><div className="profile-section-copy"><span className="profile-section-eyebrow">PREFERENCES</span><h2>Language</h2><p>Set the language code for your learning experience.</p></div><div className="profile-fields grid gap-4"><label className="grid gap-1.5">Language or locale<input name="locale" defaultValue={user.locale} minLength={2} maxLength={16} placeholder="en"/><small>For example, en, en-GB, or fr.</small></label></div></section>
+            <div className="profile-settings-actions flex flex-col items-start justify-end gap-3.5 border-b border-[#e5e5e5] px-0 py-[10px] md:flex-row md:items-center md:pb-[17px]">{error && <p className="account-error" role="alert">{error}</p>}{message && <p className="account-success" role="status">{message}</p>}<Button type="submit" disabled={busy}>{busy ? "Saving…" : "Save changes"}</Button></div>
           </form>
 
           <section className="profile-account-card" id="account-details" aria-labelledby="profile-account-title"><div className="profile-section-copy"><span className="profile-section-eyebrow">ACCOUNT</span><h2 id="profile-account-title">Account details</h2><p>Information associated with your CyberSmart account.</p></div><dl className="profile-account-details"><div><dt>Email</dt><dd>{user.email}</dd></div><div><dt>Account type</dt><dd className="profile-capitalize">{user.role}</dd></div><div><dt>Member since</dt><dd>{accountDate(user.created_at)}</dd></div><div><dt>Profile last updated</dt><dd>{accountDate(user.profile_updated_at)}</dd></div></dl></section>
 
-          <section className="profile-session-card" aria-labelledby="profile-session-title"><div><span className="profile-section-eyebrow">SECURITY</span><h2 id="profile-session-title">Current session</h2><p>You’re signed in on this device. Sign out when you’re using a shared computer.</p></div><button type="button" onClick={signOut}>Sign out</button></section>
+          <section className="profile-session-card" aria-labelledby="profile-session-title"><div><span className="profile-section-eyebrow">SECURITY</span><h2 id="profile-session-title">Current session</h2><p>You’re signed in on this device. Sign out when you’re using a shared computer.</p></div><Button type="button" variant="outline" onClick={signOut}>Sign out</Button></section>
         </div>
       </div>}
     </main>

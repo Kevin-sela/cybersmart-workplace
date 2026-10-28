@@ -815,7 +815,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible { outline: 3px soli
 .module-overview-progress { display:grid; grid-template-columns:35px minmax(0,1fr); align-items:center; gap:8px; margin-top:auto; padding:0!important; border:0!important; }
 .module-overview-progress>strong { color:var(--ink); font-size:12px; font-weight:650; }
 .module-overview-track,.latest-quiz-track { display:block; height:7px; overflow:hidden; border-radius:99px; background:var(--lav); }
-.module-overview-track i,.latest-quiz-track i { display:block; height:100%; border-radius:inherit; background:var(--brand-jade); }
+.module-overview-track span,.latest-quiz-track i { display:block; height:100%; border-radius:inherit; background:var(--brand-jade); }
 .module-overview-card-2 .module-overview-number { background:var(--success-green); }
 .module-overview-card-3 .module-overview-number { background:var(--brand-ocean); }
 .module-overview-card-4 .module-overview-number { background:var(--brand-error); }

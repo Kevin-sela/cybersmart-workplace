@@ -2,12 +2,11 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { ArrowRight, BookOpenText, CheckCircle2, Clock3, Gauge, MessageSquareText, Sparkles } from "lucide-react";
+import { ArrowRight, BookOpenText, CheckCircle2, Clock3, Gauge, Sparkles } from "lucide-react";
 
 import { ProgressDonut } from "@/components/dashboard/progress-donut";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
 import { ProgressSummary } from "@/services/api";
 
 const choices = ["Check the sender and don’t open it yet", "Open the document to see what it is", "Reply to ask if it’s real", "Forward it to a colleague for advice"];
@@ -131,7 +130,7 @@ export function LatestQuizSummary({ progress, loading }: { progress: ProgressSum
         </span>
         <div>
           <p className="text-sm font-semibold text-foreground">
-            {loading ? "Loading quiz activity…" : unavailable ? "Sign in to view quiz activity" : latest ? latest.title : "No quiz yet"}
+            {loading ? "Loading quiz activity…" : unavailable ? "Sign in to view quiz activity" : latest ? (latest.passed ? "Latest quiz passed" : "Latest quiz attempted") : "No quiz yet"}
           </p>
           <p className="text-xs text-muted-foreground">latest score</p>
         </div>

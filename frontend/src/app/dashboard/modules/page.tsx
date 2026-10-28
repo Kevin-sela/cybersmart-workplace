@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { DashboardHeader } from "@/components/dashboard/dashboard-header";
 import { COURSE_MODULES, LESSON_PROGRESS_KEY } from "@/lib/course";
 import { api, ProgressSummary } from "@/services/api";
+import { Button } from "@/components/ui/button";
 
 export default function ModulesPage() {
   const [firstModuleComplete, setFirstModuleComplete] = useState(false);
@@ -33,7 +34,7 @@ export default function ModulesPage() {
         <div className="dashboard-breadcrumb"><Link href="/dashboard">My learning</Link><span aria-hidden="true">/</span><strong>Modules</strong><Badge variant="muted">4 modules</Badge></div>
         <section className="dashboard-welcome detail-welcome">
           <div><p className="dashboard-eyebrow">COURSE CONTENT</p><h1>Course modules</h1><p>Practical lessons for safer work.</p></div>
-          <Link className="dashboard-cta" href="/dashboard/progress">View progress <span aria-hidden="true">→</span></Link>
+          <Button asChild className="dashboard-cta"><Link href="/dashboard/progress">View progress <span aria-hidden="true">→</span></Link></Button>
         </section>
         <div className="module-page-list">
           {COURSE_MODULES.map((module) => {
