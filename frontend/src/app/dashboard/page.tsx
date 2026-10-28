@@ -94,7 +94,7 @@ export default function DashboardPage() {
           const isComplete = moduleLessonsTotal > 0 && moduleLessonsCompleted === moduleLessonsTotal;
           const moduleProgress = moduleLessonsTotal ? Math.round(moduleLessonsCompleted / moduleLessonsTotal * 100) : 0;
           const content = <Card className={`module-overview-card module-overview-card-${module.week}`}>
-            <div className="module-overview-main"><span className="module-overview-number">{String(module.week).padStart(2, "0")}</span><span className="module-overview-divider"/><div className="module-overview-copy"><CardTitle>{module.title}</CardTitle>{isComplete && <span className="module-overview-complete">Complete</span>}</div></div>
+            <div className="module-overview-main"><span className="module-overview-number">{String(module.week).padStart(2, "0")}</span><div className="module-overview-copy"><CardTitle>{module.title}</CardTitle>{isComplete && <span className="module-overview-complete">Complete</span>}</div></div>
             <CardDescription>{module.detail}</CardDescription>
             <CardContent className="module-overview-progress"><strong>{progressLoading ? "—" : moduleLessonsCompleted + " / " + moduleLessonsTotal}</strong><ShadcnProgress className="module-overview-track" value={moduleProgress} label={module.title + " lesson progress"} /></CardContent>
           </Card>;
