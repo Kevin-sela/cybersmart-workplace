@@ -11,7 +11,7 @@ export function Badge({ className = "", variant = "default", ...props }: BadgePr
         "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors",
         variant === "default" && "border-transparent bg-primary text-primary-foreground",
         variant === "muted" && "border-border bg-secondary text-secondary-foreground",
-        variant === "success" && "border-transparent bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-200",
+        variant === "success" && "border-transparent bg-success/10 text-success",
         className
       )}
       {...props}

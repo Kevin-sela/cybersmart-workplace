@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useEffect, useRef, useState } from "react";
-import { CourseVideoCard } from "@/components/course/course-video-card";
 import { api } from "@/services/api";
 
 export default function LessonPage() {
@@ -48,7 +47,6 @@ export default function LessonPage() {
           <h1>First steps: spot a suspicious message</h1>
           <p className="lesson-lede">A few moments of careful checking can protect your account, your colleagues, and your workplace.</p>
           <div className="lesson-callout"><span aria-hidden="true">i</span><p><strong>Learning goal</strong> · Identify common warning signs and choose a safe way to verify a request.</p></div>
-          <CourseVideoCard week={1} title="Recognise threats" description="Spot phishing signs and suspicious links." />
           <h2>Pause before you act</h2>
           <p>A phishing message tries to persuade you to share information, open a file, or visit a website. It may arrive by email, text, or workplace chat. The message can look routine, so pause and check it before acting.</p>
           <h2 id="spot-clues">Look for the clues</h2>

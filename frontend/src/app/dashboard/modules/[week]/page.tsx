@@ -1,9 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { DashboardHeader } from "@/components/dashboard/dashboard-header";
-import { CourseVideoCard } from "@/components/course/course-video-card";
 import { COURSE_MODULES } from "@/lib/course";
 
 const moduleDetails: Record<number, { outcome: string; points: string[]; actionLabel: string; actionHref: string }> = {
@@ -37,12 +35,11 @@ export default async function CourseModuleDetailPage({ params }: { params: Promi
 
   return <div className="dashboard-page detail-page"><DashboardHeader active="modules"/><main className="dashboard-main">
     <div className="dashboard-breadcrumb"><Link href="/dashboard">Overview</Link><span aria-hidden="true">/</span><Link href="/dashboard/modules">Modules</Link><span aria-hidden="true">/</span><strong>Module {number}</strong></div>
-    <section className="dashboard-welcome detail-welcome"><div><p className="dashboard-eyebrow">MODULE {String(number).padStart(2,"0")}</p><h1>{courseModule.title}</h1><p>{courseModule.detail}</p></div><Badge variant="muted">Preview</Badge></section>
+    <section className="dashboard-welcome detail-welcome"><div><p className="dashboard-eyebrow">MODULE {String(number).padStart(2,"0")}</p><h1>{courseModule.title}</h1><p>{courseModule.detail}</p></div></section>
     <div className="module-detail-layout"><Card className="overview-panel module-detail-card"><div className="module-detail-heading"><div><span className="module-detail-icon" aria-hidden="true">{String(number).padStart(2,"0")}</span><div><p className="dashboard-eyebrow">LEARNING OUTCOME</p><h2>What you’ll learn</h2></div></div></div><p className="module-detail-outcome">{details.outcome}</p>
       <ul className="module-detail-points">{details.points.map(point=><li key={point}><span aria-hidden="true">✓</span>{point}</li>)}</ul>
-      <div className="module-detail-status"><strong>This module is being prepared.</strong><span>You can still try a related activity while the lesson is in progress.</span></div>
+      <div className="module-detail-status"><strong>Practice activity</strong><span>Apply these steps to a realistic workplace scenario.</span></div>
       <Link className="next-lesson-button module-detail-action" href={details.actionHref}>{details.actionLabel}<span aria-hidden="true">→</span></Link>
     </Card><aside className="module-detail-aside"><Card className="overview-panel module-detail-meta"><p className="dashboard-eyebrow">COURSE</p><h2>Practical cybersecurity awareness</h2><p>Four short modules for safer work.</p><Link className="overview-text-link" href="/dashboard/modules">See all modules <span aria-hidden="true">→</span></Link></Card><Link className="module-detail-back" href="/dashboard">← Back to overview</Link></aside></div>
-    <CourseVideoCard week={number as 2 | 3 | 4} title={courseModule.title} description={details.outcome} />
   </main></div>;
 }

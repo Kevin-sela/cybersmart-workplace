@@ -97,7 +97,7 @@ export default function DashboardPage() {
             <CardDescription>{module.detail}</CardDescription>
             <CardContent className="module-overview-progress"><strong>{progressLoading ? "—" : moduleLessonsCompleted + " / " + moduleLessonsTotal}</strong><ShadcnProgress className="module-overview-track" value={moduleProgress} label={module.title + " lesson progress"} /></CardContent>
           </Card>;
-          const href = module.href ?? `/dashboard/modules/${module.week}`;
+          const href = module.href;
           return <Link className="module-page-link" href={href} key={module.week} aria-label={`${isComplete ? "Review" : "Open"} ${module.title}`}>{content}</Link>;
         })}
       </div>

@@ -1,6 +1,8 @@
 node_modules/
 .next/
 .next-build-verify/
+.next-color-check/
+.next-review-build/
 out/
 .env*
 !.env.example

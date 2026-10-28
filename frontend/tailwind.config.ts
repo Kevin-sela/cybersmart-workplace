@@ -8,6 +8,18 @@ export default {
   theme: {
     extend: {
       colors: {
+        royal: "var(--brand-royal)",
+        navigation: "var(--brand-nav)",
+        ocean: "var(--brand-ocean)",
+        jade: "var(--brand-jade)",
+        gold: "var(--brand-gold)",
+        lavender: "var(--lav)",
+        mist: "var(--mist)",
+        ivory: "var(--canvas)",
+        charcoal: "var(--ink)",
+        "slate-grey": "var(--slate-grey)",
+        success: "var(--success-green)",
+        error: "var(--error-red)",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

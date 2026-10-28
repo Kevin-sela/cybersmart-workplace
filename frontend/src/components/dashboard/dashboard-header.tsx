@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import { Bell, Home, MessageSquareText, Settings, ShieldCheck, Sparkles, UserCircle2 } from "lucide-react";
+import { Bell, BookOpenText, Dumbbell, Home, MessagesSquare, Settings, ShieldCheck, UserCircle2 } from "lucide-react";
 
 import { api, UserProfile } from "@/services/api";
 import { enablePushNotifications, isPushEnabled, loadOneSignal } from "./push-notifications";
@@ -35,11 +35,11 @@ function Icon({ kind }: { kind: NavItem["icon"] }) {
     case "home":
       return <Home className={className} />;
     case "modules":
-      return <Sparkles className={className} />;
+      return <BookOpenText className={className} />;
     case "practice":
-      return <MessageSquareText className={className} />;
+      return <Dumbbell className={className} />;
     case "discussion":
-      return <MessageSquareText className={className} />;
+      return <MessagesSquare className={className} />;
     case "settings":
       return <Settings className={className} />;
     case "user":
@@ -50,8 +50,7 @@ function Icon({ kind }: { kind: NavItem["icon"] }) {
 }
 
 export function DashboardHeader({ active }: DashboardHeaderProps) {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [isMobile, setIsMobile] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [pushEnabled, setPushEnabled] = useState(false);
   const [pushBusy, setPushBusy] = useState(false);
@@ -70,15 +69,7 @@ export function DashboardHeader({ active }: DashboardHeaderProps) {
   }, []);
 
   useEffect(() => {
-    const query = window.matchMedia("(max-width: 700px)");
-    const updateViewport = () => { setIsMobile(query.matches); setSidebarOpen(!query.matches); };
-    updateViewport();
-    query.addEventListener("change", updateViewport);
-    return () => query.removeEventListener("change", updateViewport);
-  }, []);
-
-  useEffect(() => {
-    if (!sidebarOpen || !isMobile) return;
+    if (!sidebarOpen) return;
     const closeOnEscape = (event: KeyboardEvent) => { if (event.key === "Escape") setSidebarOpen(false); };
     const closeOutside = (event: PointerEvent) => {
       if (event.target instanceof Node && !menuRef.current?.contains(event.target) && !sidebarRef.current?.contains(event.target)) {
@@ -88,7 +79,7 @@ export function DashboardHeader({ active }: DashboardHeaderProps) {
     document.addEventListener("keydown", closeOnEscape);
     document.addEventListener("pointerdown", closeOutside);
     return () => { document.removeEventListener("keydown", closeOnEscape); document.removeEventListener("pointerdown", closeOutside); };
-  }, [sidebarOpen, isMobile]);
+  }, [sidebarOpen]);
 
   useEffect(() => {
     if (!notificationsOpen) return;
@@ -127,21 +118,48 @@ export function DashboardHeader({ active }: DashboardHeaderProps) {
       <header className="sticky top-0 z-40 border-b border-border/80 bg-background/80 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
           <div className="flex items-center gap-3">
-            <div className="relative" ref={menuRef}>
+            <div className="dashboard-menu-control" ref={menuRef}>
               <button
                 type="button"
-                className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-card text-foreground shadow-sm transition hover:border-primary/30 hover:bg-primary/5 md:hidden"
+                className="dashboard-menu-button"
                 aria-expanded={sidebarOpen}
                 aria-controls="dashboard-learning-sidebar"
                 aria-label={sidebarOpen ? "Close learning navigation" : "Open learning navigation"}
                 onClick={() => setSidebarOpen((value) => !value)}
               >
-                <span className="space-y-1">
+                <span className={`hamburger-icon ${sidebarOpen ? "hamburger-open" : ""}`}>
                   <span className={`block h-0.5 w-4 rounded-full bg-current transition ${sidebarOpen ? "translate-y-1.5 rotate-45" : ""}`} />
                   <span className={`block h-0.5 w-4 rounded-full bg-current transition ${sidebarOpen ? "opacity-0" : ""}`} />
                   <span className={`block h-0.5 w-4 rounded-full bg-current transition ${sidebarOpen ? "-translate-y-1.5 -rotate-45" : ""}`} />
                 </span>
               </button>
+              {sidebarOpen && (
+                <aside
+                  className="dashboard-menu-popover"
+                  id="dashboard-learning-sidebar"
+                  ref={sidebarRef}
+                >
+                  <div className="menu-popover-heading"><Mark /><div><strong>CyberSmart</strong><small>WORKPLACE</small></div></div>
+                  <p className="menu-section-label">LEARNING</p>
+                  <nav className="dashboard-menu-list" aria-label="Main learning navigation">
+                    {navItems.map((item) => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        onClick={() => setSidebarOpen(false)}
+                        className={`menu-item ${
+                          isCurrent(item)
+                            ? "menu-item-active"
+                            : ""
+                        }`}
+                      >
+                        <Icon kind={item.icon} />
+                        {item.label}
+                      </Link>
+                    ))}
+                  </nav>
+                </aside>
+              )}
             </div>
 
             <Link href="/" className="flex items-center gap-3 text-foreground no-underline">
@@ -152,23 +170,6 @@ export function DashboardHeader({ active }: DashboardHeaderProps) {
               </div>
             </Link>
           </div>
-
-          <nav className="hidden items-center gap-2 md:flex">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition ${
-                  isCurrent(item)
-                    ? "bg-primary/10 text-primary"
-                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                }`}
-              >
-                <Icon kind={item.icon} />
-                {item.label}
-              </Link>
-            ))}
-          </nav>
 
           <div className="flex items-center gap-3" ref={notificationsRef}>
             <div className="relative">
@@ -209,51 +210,6 @@ export function DashboardHeader({ active }: DashboardHeaderProps) {
           </div>
         </div>
       </header>
-
-      {isMobile && sidebarOpen && (
-        <button className="fixed inset-0 z-30 bg-slate-950/20" aria-label="Close learning navigation" onClick={() => setSidebarOpen(false)} />
-      )}
-
-      <aside
-        className={`fixed inset-y-[77px] left-0 z-40 w-72 border-r border-border bg-background/95 p-4 backdrop-blur-xl transition-transform duration-200 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
-        id="dashboard-learning-sidebar"
-        ref={sidebarRef}
-      >
-        <div className="mb-6 flex items-center gap-3 rounded-xl border border-border bg-card p-3 shadow-sm">
-          <Mark />
-          <div>
-            <p className="text-sm font-bold">CyberSmart</p>
-            <p className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">Workplace</p>
-          </div>
-        </div>
-
-        <nav className="space-y-2" aria-label="Main learning navigation">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition ${
-                isCurrent(item)
-                  ? "bg-primary/10 text-primary"
-                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
-              }`}
-            >
-              <Icon kind={item.icon} />
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-
-        <div className="mt-auto flex items-center gap-3 rounded-xl border border-border bg-card p-3 text-xs font-medium text-muted-foreground">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
-            <ShieldCheck className="h-4 w-4" />
-          </div>
-          <div>
-            <span className="block text-[10px] uppercase tracking-[0.22em] text-muted-foreground">Course</span>
-            <span className="block text-sm font-semibold text-foreground">CyberSmart</span>
-          </div>
-        </div>
-      </aside>
     </>
   );
 }

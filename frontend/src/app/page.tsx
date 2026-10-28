@@ -16,10 +16,10 @@ function TopicIcon({ kind }: { kind: "search" | "link" | "lock" | "alert" }) {
 }
 
 const modules = [
-  { number: "01", title: "Recognising cyber threats", description: "Learn how to spot phishing, social engineering and other common threats.", time: "8 min", icon: "search" as const, color: "lilac", available: true },
-  { number: "02", title: "Safe links and browsing", description: "Check destinations, question suspicious links and browse more safely.", time: "Coming soon", icon: "link" as const, color: "blue", available: false },
-  { number: "03", title: "Protecting accounts", description: "Build safer habits with strong passwords and multi-factor authentication.", time: "Coming soon", icon: "lock" as const, color: "mint", available: false },
-  { number: "04", title: "Reporting and responding", description: "Know what to do when you notice something suspicious at work.", time: "Coming soon", icon: "alert" as const, color: "gold", available: false },
+  { number: "01", title: "Recognising cyber threats", description: "Learn how to spot phishing, social engineering and other common threats.", time: "8 min", icon: "search" as const, color: "lilac", href: "/learn/first-steps" },
+  { number: "02", title: "Choose safe actions", description: "Check unexpected requests and protect accounts with strong passwords and multi-factor authentication.", time: "Knowledge check", icon: "link" as const, color: "blue", href: "/dashboard/modules/2" },
+  { number: "03", title: "Respond together", description: "Use a clear stop, record and report process when something goes wrong.", time: "Team checklist", icon: "lock" as const, color: "mint", href: "/dashboard/modules/3" },
+  { number: "04", title: "Final review", description: "Apply the course skills in a workplace scenario and knowledge check.", time: "Final knowledge check", icon: "alert" as const, color: "gold", href: "/dashboard/modules/4" },
 ];
 
 export default function Home() {
@@ -52,7 +52,7 @@ export default function Home() {
           <div className={`path-icon ${module.color}`}><TopicIcon kind={module.icon}/></div>
           <div className="path-number">{module.number}</div>
           <h3>{module.title}</h3><p>{module.description}</p>
-          <div className="path-card-footer"><span className="path-time">{module.available ? "◷" : "·"} &nbsp;{module.time}</span>{module.available ? <Link href="/learn/first-steps" aria-label="Open Recognising cyber threats lesson">Start <span aria-hidden="true">→</span></Link> : <span className="upcoming-label">Planned</span>}</div>
+          <div className="path-card-footer"><span className="path-time">{module.time}</span><Link href={module.href} aria-label={`Open ${module.title}`}>{module.number === "01" ? "Start lesson" : "Explore module"} <span aria-hidden="true">→</span></Link></div>
         </article>)}</div>
       </div>
     </section>

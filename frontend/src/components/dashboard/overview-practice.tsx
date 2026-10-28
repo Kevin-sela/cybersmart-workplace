@@ -68,7 +68,7 @@ export function LearningOverviewSummary({
               </div>
 
               <div className="flex items-center gap-3 rounded-xl border border-border bg-muted/40 p-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-600">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-success/10 text-success">
                   <SummaryIcon kind="clock" />
                 </div>
                 <div className="min-w-0">
@@ -137,7 +137,7 @@ export function LatestQuizSummary({ progress, loading }: { progress: ProgressSum
       </div>
 
       <div className="flex items-center gap-3 rounded-xl border border-border bg-muted/40 p-3">
-        <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-600">
+        <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-success/10 text-success">
           <CheckCircle2 className="h-4 w-4" />
         </span>
         <div>
@@ -149,7 +149,7 @@ export function LatestQuizSummary({ progress, loading }: { progress: ProgressSum
       </div>
 
       <div className="flex items-center gap-3 rounded-xl border border-border bg-muted/40 p-3">
-        <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-500/10 text-amber-600">
+        <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-gold/20 text-charcoal">
           <Sparkles className="h-4 w-4" />
         </span>
         <div>
@@ -211,7 +211,7 @@ export function OverviewPractice() {
           </div>
 
           {answer !== null && (
-            <div className={`mt-4 rounded-xl border px-3 py-2.5 text-sm ${answer === 0 ? "border-emerald-200 bg-emerald-50 text-emerald-900" : "border-red-200 bg-red-50 text-red-900"}`} aria-live="polite">
+            <div className={`mt-4 rounded-xl border px-3 py-2.5 text-sm ${answer === 0 ? "border-success/30 bg-success/10 text-success" : "border-error/30 bg-error/10 text-error"}`} aria-live="polite">
               <strong className="font-semibold">{answer === 0 ? "Good first step." : "Not the safest move."}</strong>
               <p className="mt-1 text-sm/5 text-current/80">
                 {answer === 0
@@ -238,7 +238,7 @@ export function OverviewPractice() {
           </div>
 
           <div className="flex items-start gap-3 rounded-xl border border-border bg-muted/40 p-3">
-            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-500/10 text-sm font-bold text-emerald-700">L</span>
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-success/10 text-sm font-bold text-success">L</span>
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">Learning prompt</p>
               <p className="mt-1 text-sm text-foreground">Look at the sender, unexpected urgency, and whether the file should have been shared this way.</p>

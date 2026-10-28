@@ -36,18 +36,18 @@ export default function ModulesPage() {
           <div><p className="dashboard-eyebrow">COURSE CONTENT</p><h1>Course modules</h1><p>Practical lessons for safer work.</p></div>
           <Button asChild className="dashboard-cta"><Link href="/dashboard/progress">View progress <span aria-hidden="true">→</span></Link></Button>
         </section>
-        <div className="module-page-list">
+        <div className="module-page-list grid grid-cols-1 gap-4 md:grid-cols-2">
           {COURSE_MODULES.map((module) => {
-            const available = module.week === 1;
+            const available = true;
             const moduleLessons = progress?.items.filter(item => item.module_week === module.week) ?? [];
-            const complete = progressLoading ? false : progress ? moduleLessons.length > 0 && moduleLessons.every(item => item.status === "completed") : available && firstModuleComplete;
-            const content = <Card className={`module-page-card ${available ? "module-page-card-available" : ""}`}>
+            const complete = progressLoading ? false : progress ? moduleLessons.length > 0 && moduleLessons.every(item => item.status === "completed") : module.week === 1 && firstModuleComplete;
+            const content = <Card className={`module-page-card grid min-h-[142px] grid-cols-[36px_minmax(0,1fr)] gap-x-3 gap-y-0 p-4 transition ${available ? "module-page-card-available" : ""}`}>
               <span className={`module-page-number ${complete ? "module-page-number-complete" : ""}`}>{complete ? "✓" : String(module.week).padStart(2, "0")}</span>
-              <CardHeader><Badge variant={complete ? "success" : available ? "default" : "muted"}>{complete ? "Complete" : module.status}</Badge><CardTitle>{module.title}</CardTitle><CardDescription>{module.detail}</CardDescription></CardHeader>
-              <CardContent>{available ? <span className="module-page-action">{complete ? "Review lesson" : "Start lesson"}<span aria-hidden="true">→</span></span> : <span className="module-page-action module-page-action-muted">Available soon</span>}</CardContent>
+              <CardHeader className="items-start gap-2 p-0"><Badge variant={complete ? "success" : available ? "default" : "muted"}>{complete ? "Complete" : module.status}</Badge><CardTitle>{module.title}</CardTitle><CardDescription>{module.detail}</CardDescription></CardHeader>
+              <CardContent className="col-start-2 mt-3 p-0"><span className="module-page-action">{complete ? "Review module" : module.week === 1 ? "Start lesson" : "Open module"}<span aria-hidden="true">→</span></span></CardContent>
             </Card>;
-            const href = module.href ?? `/dashboard/modules/${module.week}`;
-            return <Link className="module-page-link" href={href} key={module.week} aria-label={`${complete ? "Review" : "Open"} ${module.title}`}>{content}</Link>;
+            const href = module.href;
+            return <Link className="module-page-link block" href={href} key={module.week} aria-label={`${complete ? "Review" : "Open"} ${module.title}`}>{content}</Link>;
           })}
         </div>
       </main>

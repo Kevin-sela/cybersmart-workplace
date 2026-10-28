@@ -3,26 +3,46 @@
 @tailwind utilities;
 
 :root {
-  --background: 210 20% 98%;
-  --foreground: 222.2 84% 4.9%;
+  /* Design tokens from docs/DESIGN.md */
+  --brand-royal: #2541B2;
+  --brand-nav: #2E294E;
+  --brand-ocean: #246A8F;
+  --brand-jade: #2A9D8F;
+  --brand-gold: #E9C46A;
+  --lav: #EDE7F6;
+  --mist: #E7F3F7;
+  --canvas: #F8F8F6;
+  --white: #FFFFFF;
+  --ink: #20252B;
+  --slate-grey: #52606D;
+  --success-green: #287D5A;
+  --error-red: #B42318;
+  --line: #D9E0E3;
+  --navy: var(--brand-nav);
+  --teal: var(--brand-jade);
+  --teal-dark: var(--brand-ocean);
+  --brand-error: var(--error-red);
+
+  --background: 60 14% 97%;
+  --foreground: 213 15% 15%;
   --card: 0 0% 100%;
-  --card-foreground: 222.2 84% 4.9%;
+  --card-foreground: 213 15% 15%;
   --popover: 0 0% 100%;
-  --popover-foreground: 222.2 84% 4.9%;
-  --primary: 221.2 83.2% 53.3%;
-  --primary-foreground: 210 40% 98%;
-  --secondary: 210 40% 96.1%;
-  --secondary-foreground: 222.2 47.4% 11.2%;
-  --muted: 210 40% 96.1%;
-  --muted-foreground: 215.4 16.3% 46.9%;
-  --accent: 210 40% 96.1%;
-  --accent-foreground: 222.2 47.4% 11.2%;
-  --destructive: 0 84.2% 60.1%;
-  --destructive-foreground: 210 40% 98%;
-  --border: 214.3 31.8% 91.4%;
-  --input: 214.3 31.8% 91.4%;
-  --ring: 221.2 83.2% 53.3%;
-  --radius: 1rem;
+  --popover-foreground: 213 15% 15%;
+  --primary: 173 58% 39%;
+  --primary-foreground: 213 15% 15%;
+  --secondary: 264 45% 94%;
+  --secondary-foreground: 248 31% 23%;
+  --muted: 195 50% 94%;
+  --muted-foreground: 209 14% 37%;
+  --accent: 43 74% 66%;
+  --accent-foreground: 213 15% 15%;
+  --destructive: 4 76% 40%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 198 15% 87%;
+  --input: 198 15% 87%;
+  --ring: 201 60% 35%;
+  --radius: 0.5rem;
 }
 
 html {
@@ -47,6 +67,6 @@ a {
 
 button:focus-visible,
 a:focus-visible {
-  outline: 3px solid rgba(59, 130, 246, 0.45);
+  outline: 3px solid var(--brand-ocean);
   outline-offset: 2px;
 }

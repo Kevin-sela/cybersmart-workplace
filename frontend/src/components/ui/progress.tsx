@@ -9,7 +9,7 @@ export function Progress({ value, label, className = "", ...props }: ProgressPro
 
   return (
     <div
-      className={cn("relative h-2 w-full overflow-hidden rounded-full bg-secondary", className)}
+      className={cn("relative h-2 w-full overflow-hidden rounded-full bg-muted", className)}
       role="progressbar"
       aria-label={label}
       aria-valuenow={boundedValue}
