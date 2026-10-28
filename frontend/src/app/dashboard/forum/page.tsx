@@ -1,12 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import { DashboardHeader } from "@/components/dashboard/dashboard-header";
 import { api, ForumChannel, ForumPost } from "@/services/api";
 
-type Message = { id: string; author: string; initials: string; role: string; body: string; time: string; tone: "facilitator" | "learner" };
+type Message = { id: string; author: string; initials: string; role: string; body: string; time: string; isMine: boolean };
 
 function ForumIcon({ kind }: { kind: "hash" | "plus" | "send" | "people" | "info" }) {
   const paths = {
@@ -28,6 +28,14 @@ export default function ForumPage() {
   const [draft, setDraft] = useState("");
   const [error, setError] = useState("");
   const [posting, setPosting] = useState(false);
+  const [channelFormOpen, setChannelFormOpen] = useState(false);
+  const [creatingChannel, setCreatingChannel] = useState(false);
+  const [channelLabel, setChannelLabel] = useState("");
+  const [channelDescription, setChannelDescription] = useState("");
+  const [notice, setNotice] = useState("");
+  const [currentUserId, setCurrentUserId] = useState("");
+  const messageEndRef = useRef<HTMLDivElement>(null);
+  const [messages, setMessages] = useState<Message[]>([]);
   useEffect(() => {
     api.discussionChannels()
       .then(items => {
@@ -50,13 +58,42 @@ export default function ForumPage() {
     return () => { current = false; };
   }, [activeChannel]);
   const channel = liveChannels.find(item => item.id === activeChannel);
-  const messages: Message[] = (serverPosts ?? []).map(post => ({ id: post.id, author: post.author, initials: post.author.slice(0, 2).toUpperCase(), role: post.role, body: post.body, time: new Date(post.created_at).toLocaleString(), tone: post.role.toLowerCase().includes("facilitator") ? "facilitator" : "learner" }));
+  useEffect(() => { api.me().then(user => setCurrentUserId(user.id)).catch(() => setCurrentUserId("")); }, []);
+  useEffect(() => {
+    setMessages((serverPosts ?? []).map(post => ({
+      id: post.id,
+      author: post.author,
+      initials: post.author.trim().split(/\s+/).slice(0, 2).map(part => part[0]).join("").toUpperCase(),
+      role: post.role,
+      body: post.body,
+      time: new Date(post.created_at).toLocaleString(),
+      isMine: post.author_id === currentUserId,
+    })));
+  }, [serverPosts, currentUserId]);
+  useEffect(() => {
+    messageEndRef.current?.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "end" });
+  }, [activeChannel, messages.length]);
+
+  async function createChannel(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!channelLabel.trim() || !channelDescription.trim()) return;
+    setCreatingChannel(true); setError(""); setNotice("");
+    try {
+      const created = await api.createDiscussionChannel({ label: channelLabel.trim(), description: channelDescription.trim() });
+      setLiveChannels(current => [...current, created].sort((left, right) => left.module_week - right.module_week));
+      setActiveChannel(created.id);
+      setChannelLabel(""); setChannelDescription("");
+      setChannelFormOpen(false);
+      setNotice("Channel “" + created.label + "” created.");
+    } catch (e) { setError(e instanceof Error ? e.message : "The channel could not be created."); }
+    finally { setCreatingChannel(false); }
+  }
 
   async function postMessage(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const body = draft.trim();
     if (!body) return;
-    setPosting(true); setError("");
+    setPosting(true); setError(""); setNotice("");
     try { const saved = await api.sendDiscussionPost(activeChannel, body); setServerPosts(current => [...(current ?? []), saved]); setDraft(""); }
     catch (e) { setError(e instanceof Error ? e.message : "Your post could not be sent."); }
     finally { setPosting(false); }
@@ -67,7 +104,14 @@ export default function ForumPage() {
     <section className="forum-workspace" aria-label="Course discussion forum">
       <aside className="forum-channel-rail">
         <div className="forum-course-heading"><span className="forum-course-icon"><ForumIcon kind="people"/></span><div><strong>Learning community</strong><small>CyberSmart course</small></div></div>
-        <div className="forum-channel-heading"><span>CHANNELS</span><button type="button" aria-label="Add a channel" title="Channels are managed by your facilitator"><ForumIcon kind="plus"/></button></div>
+        <div className="forum-channel-heading"><span>CHANNELS</span><button type="button" aria-label={channelFormOpen ? "Close channel form" : "Create a channel"} aria-expanded={channelFormOpen} onClick={() => { setChannelFormOpen(value => !value); setError(""); }} title="Create a discussion channel"><ForumIcon kind="plus"/></button></div>
+        {channelFormOpen && <form className="forum-channel-form" onSubmit={createChannel}>
+          <label htmlFor="forum-channel-name">Channel name</label>
+          <input id="forum-channel-name" value={channelLabel} onChange={event => setChannelLabel(event.target.value)} maxLength={60} placeholder="e.g. Safe browsing" required autoFocus />
+          <label htmlFor="forum-channel-description">What is it for?</label>
+          <textarea id="forum-channel-description" value={channelDescription} onChange={event => setChannelDescription(event.target.value)} maxLength={240} rows={2} placeholder="Add a short description" required />
+          <div><button type="button" onClick={() => setChannelFormOpen(false)} disabled={creatingChannel}>Cancel</button><button type="submit" disabled={creatingChannel || !channelLabel.trim() || !channelDescription.trim()}>{creatingChannel ? "Creating…" : "Create channel"}</button></div>
+        </form>}
         {channelsLoading ? <p className="forum-channel-status" role="status">Loading channels…</p> : liveChannels.length ? <nav aria-label="Discussion channels">{liveChannels.map(item=><button type="button" key={item.id} onClick={()=>setActiveChannel(item.id)} className={`forum-channel-button ${activeChannel===item.id?"forum-channel-active":""}`} aria-current={activeChannel===item.id?"page":undefined}><ForumIcon kind="hash"/><span>{item.label}</span></button>)}</nav> : <p className="forum-channel-status" role="status">No discussion channels are available.</p>}
         <div className="forum-rail-footer"><span className="forum-online-dot"/>Course discussion</div>
       </aside>
@@ -75,14 +119,16 @@ export default function ForumPage() {
       {channel ? <section className="forum-chat-panel" aria-label={`${channel.label} chat`}>
         <header className="forum-chat-header"><span className="forum-channel-hash"><ForumIcon kind="hash"/></span><div><h1>{channel.label}</h1><p>{channel.description}</p></div><span className="forum-chat-online"><i/>Discussion open</span></header>
         {error && <p className="account-error" role="alert">{error}{error.toLowerCase().includes("sign in") && <> <Link href="/sign-in?next=%2Fdashboard%2Fforum">Sign in</Link></>}</p>}
+        {notice && <p className="forum-notice" role="status">{notice}</p>}
         <div className="forum-message-list" aria-live="polite">
-          <div className="forum-day-divider"><span>WELCOME TO #{channel.label.toUpperCase()}</span></div>
+          <div className="forum-day-divider"><span>CONVERSATION</span></div>
           {postsLoading && <p className="forum-empty-state" role="status">Loading messages…</p>}
           {!postsLoading && serverPosts?.length === 0 && <p className="forum-empty-state">No messages yet. Start the conversation.</p>}
-          {messages.map(message=><article key={message.id} className={`forum-message forum-message-${message.tone}`}>
-            <span className={`forum-message-avatar forum-avatar-${message.tone}`}>{message.initials}</span>
-            <div className="forum-message-body"><div className="forum-message-meta"><strong>{message.author}</strong><span className="forum-role-tag">{message.role}</span><time>{message.time}</time></div><p>{message.body}</p></div>
+          {messages.map(message=><article key={message.id} className={"forum-message " + (message.isMine ? "forum-message-own" : "forum-message-other")}>
+            {!message.isMine && <span className="forum-message-avatar">{message.initials}</span>}
+            <div className="forum-message-body"><div className="forum-message-meta"><strong>{message.isMine ? "You" : message.author}</strong>{!message.isMine && <span className="forum-role-tag">{message.role}</span>}<time>{message.time}</time></div><p className="forum-message-bubble">{message.body}</p></div>
           </article>)}
+          <div ref={messageEndRef} aria-hidden="true" />
         </div>
         <form className="forum-composer" onSubmit={postMessage}><label className="sr-only" htmlFor="forum-message">Message #{channel.label}</label><textarea id="forum-message" rows={2} maxLength={2000} value={draft} onChange={event=>setDraft(event.target.value)} placeholder={`Message #${channel.label}`} onKeyDown={event=>{if(event.key==="Enter"&&!event.shiftKey){event.preventDefault();event.currentTarget.form?.requestSubmit();}}}/><div className="forum-composer-footer"><span>Enter to send · Shift + Enter for a new line</span><button type="submit" disabled={!draft.trim()||posting} aria-label="Send message">{posting?"…":<ForumIcon kind="send"/>}</button></div></form>
       </section> : <section className="forum-chat-panel forum-no-channel" role="status">{channelsLoading ? "Loading discussions…" : error || "No discussion channels are available."}{error.toLowerCase().includes("sign in") && <> <Link href="/sign-in?next=%2Fdashboard%2Fforum">Sign in</Link></>}</section>}

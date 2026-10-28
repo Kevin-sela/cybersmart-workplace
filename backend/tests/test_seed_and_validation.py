@@ -8,8 +8,9 @@ from app.repositories.users import get_or_link_google_user
 from app.repositories import learning as learning_repository
 from app.services.learning_service import get_progress
 from app.schemas.auth import RegisterRequest
-from app.schemas.collaboration import ForumPostInput
+from app.schemas.collaboration import ForumChannelCreate, ForumPostInput
 from app.schemas.profile import ProfileUpdate
+from app.services.discussion_service import create_discussion_channel
 
 
 def test_course_seed_is_repeatable_and_populates_assessments() -> None:
@@ -47,6 +48,22 @@ def test_free_text_is_normalized_and_control_characters_are_rejected() -> None:
     else:
         raise AssertionError("control characters must fail validation")
     assert ProfileUpdate(full_name="  Kevin O'Neil ", bio="  Learner  ", locale="en_US").locale == "en-us"
+
+
+def test_discussion_channels_can_be_created_with_unique_slugs() -> None:
+    engine = create_engine("sqlite://")
+    Base.metadata.create_all(engine)
+    with Session(engine) as db:
+        seed_demo_content(db)
+        payload = ForumChannelCreate(label="  Safer Browsing  ", description="  Share safe browsing tips.  ")
+        first = create_discussion_channel(db, payload.label, payload.description)
+        second = create_discussion_channel(db, payload.label, payload.description)
+        assert first.slug == "safer-browsing"
+        assert second.slug == "safer-browsing-2"
+        assert first.position == 5 and second.position == 6
+        assert first.title == "Safer Browsing"
+        assert first.description == "Share safe browsing tips."
+    engine.dispose()
 
 
 def test_google_identity_is_linked_to_one_local_learner() -> None:

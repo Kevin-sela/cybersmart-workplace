@@ -23,6 +23,27 @@ class ForumChannel(ApiSchema):
     module_week: int
 
 
+class ForumChannelCreate(ApiSchema):
+    label: str = Field(min_length=1, max_length=60)
+    description: str = Field(min_length=1, max_length=240)
+
+    @field_validator("label")
+    @classmethod
+    def validate_channel_label(cls, value: str) -> str:
+        value = unicodedata.normalize("NFC", value).strip()
+        if not value or any(unicodedata.category(char) == "Cc" for char in value):
+            raise ValueError("Channel names must be one line and contain no control characters.")
+        return value
+
+    @field_validator("description")
+    @classmethod
+    def validate_channel_description(cls, value: str) -> str:
+        value = unicodedata.normalize("NFC", value).strip()
+        if not value or any(unicodedata.category(char) == "Cc" and char not in "\n\t" for char in value):
+            raise ValueError("Channel text must not be empty or contain control characters.")
+        return value
+
+
 class ForumPostInput(ApiSchema):
     body: str = Field(min_length=1, max_length=2000)
 
@@ -34,6 +55,7 @@ class ForumPostInput(ApiSchema):
 
 class ForumPostRead(ApiSchema):
     id: UUID
+    author_id: UUID
     author: str
     role: str
     body: str

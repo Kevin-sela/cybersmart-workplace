@@ -25,7 +25,7 @@ export type CourseContent = { id: string; slug: string; title: string; descripti
 export type QuizContent = { id: string; title: string; instructions: string | null; pass_mark_percent: number; questions: Array<{ id: string; prompt: string; position: number; options: Array<{ id: string; text: string; position: number }> }> };
 export type QuizSubmission = { attempt_id: string; correct_count: number; total_questions: number; score_percent: number; passed: boolean; pass_mark_percent: number; feedback: Array<{ question_id: string; selected_option_id: string; correct_option_id: string; correct_answer: string; is_correct: boolean; explanation: string; answer_feedback: string | null }> };
 export type ForumChannel = { id: string; label: string; description: string; module_week: number };
-export type ForumPost = { id: string; author: string; role: string; body: string; created_at: string };
+export type ForumPost = { id: string; author_id: string; author: string; role: string; body: string; created_at: string };
 export type GroupTask = { task_id: string; title: string; brief: string; steps: string[]; saved_at: string | null };
 
 export class ApiError extends Error {
@@ -89,6 +89,7 @@ export const api = {
     return result;
   },
   discussionChannels: () => request<ForumChannel[]>("/community/channels"),
+  createDiscussionChannel: (data: { label: string; description: string }) => request<ForumChannel>("/community/channels", { method: "POST", body: JSON.stringify(data) }),
   discussionPosts: (channel: string) => request<ForumPost[]>(`/community/channels/${encodeURIComponent(channel)}/posts`),
   sendDiscussionPost: (channel: string, body: string) => request<ForumPost>(`/community/channels/${encodeURIComponent(channel)}/posts`, { method: "POST", body: JSON.stringify({ body }) }),
   groupTask: () => request<GroupTask>("/learning/team-checklist"),

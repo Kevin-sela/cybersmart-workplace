@@ -120,6 +120,15 @@ def get_channel(db: Session, course_id: UUID, slug: str) -> DiscussionChannel | 
     return db.scalar(select(DiscussionChannel).where(DiscussionChannel.course_id == course_id, DiscussionChannel.slug == slug))
 
 
+def create_channel(db: Session, course_id: UUID, slug: str, title: str, description: str) -> DiscussionChannel:
+    position = int(db.scalar(select(func.max(DiscussionChannel.position)).where(DiscussionChannel.course_id == course_id)) or 0) + 1
+    channel = DiscussionChannel(course_id=course_id, slug=slug, title=title, description=description, position=position)
+    db.add(channel)
+    db.commit()
+    db.refresh(channel)
+    return channel
+
+
 def list_channel_posts(db: Session, channel: DiscussionChannel) -> list[tuple[DiscussionPost, User]]:
     query = (
         select(DiscussionPost, User)

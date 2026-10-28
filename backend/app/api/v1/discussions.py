@@ -4,10 +4,10 @@ from sqlalchemy.orm import Session
 from app.api.dependencies import get_current_user
 from app.db.session import get_db
 from app.models.entities import User
-from app.repositories import learning as repository
 from app.repositories.learning import create_channel_post, get_channel, list_channel_posts, list_channels
 from app.repositories.learning import get_course
-from app.schemas.collaboration import ForumChannel, ForumPostInput, ForumPostRead
+from app.schemas.collaboration import ForumChannel, ForumChannelCreate, ForumPostInput, ForumPostRead
+from app.services.discussion_service import create_discussion_channel
 
 router = APIRouter(prefix="/forum", tags=["discussions"])
 
@@ -27,12 +27,18 @@ def channels(db: Session = Depends(get_db), _user: User = Depends(get_current_us
     return [ForumChannel(id=channel.slug, label=channel.title, description=channel.description, module_week=channel.position) for channel in list_channels(db, course.id)]
 
 
+@router.post("/channels", response_model=ForumChannel, status_code=201)
+def add_channel(payload: ForumChannelCreate, db: Session = Depends(get_db), _user: User = Depends(get_current_user)) -> ForumChannel:
+    channel = create_discussion_channel(db, payload.label, payload.description)
+    return ForumChannel(id=channel.slug, label=channel.title, description=channel.description, module_week=channel.position)
+
+
 @router.get("/channels/{slug}/posts", response_model=list[ForumPostRead])
 def posts(slug: str, db: Session = Depends(get_db), _user: User = Depends(get_current_user)) -> list[ForumPostRead]:
     channel = get_channel(db, course_id(db), slug)
     if channel is None:
         raise HTTPException(status_code=404, detail="Discussion channel not found.")
-    return [ForumPostRead(id=post.id, author=user.full_name, role=user.role.value.title(), body=post.body, created_at=post.created_at) for post, user in list_channel_posts(db, channel)]
+    return [ForumPostRead(id=post.id, author_id=user.id, author=user.full_name, role=user.role.value.title(), body=post.body, created_at=post.created_at) for post, user in list_channel_posts(db, channel)]
 
 
 @router.post("/channels/{slug}/posts", response_model=ForumPostRead, status_code=201)
@@ -41,4 +47,4 @@ def add_post(slug: str, payload: ForumPostInput, db: Session = Depends(get_db), 
     if channel is None:
         raise HTTPException(status_code=404, detail="Discussion channel not found.")
     post = create_channel_post(db, channel, user, payload.body)
-    return ForumPostRead(id=post.id, author=user.full_name, role=user.role.value.title(), body=post.body, created_at=post.created_at)
+    return ForumPostRead(id=post.id, author_id=user.id, author=user.full_name, role=user.role.value.title(), body=post.body, created_at=post.created_at)

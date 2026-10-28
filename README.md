@@ -4,7 +4,7 @@ A planned low-bandwidth e-learning application for a short course on **Cybersecu
 
 ## Current build
 
-The app has a public course landing page, learner dashboard, sign-in/sign-up, learner profile, course progress, quiz submission, discussions, and a group checklist. The FastAPI backend includes account/session handling, profile updates, course content, progress, quizzes, forum, and group-task APIs. Instructor reporting and LMS integration remain future scope.
+The app has a public course landing page, learner dashboard, sign-in/sign-up, learner profile, course progress, quiz submission, discussions with learner-created channels, and a group checklist. The FastAPI backend includes account/session handling, profile updates, course content, progress, quizzes, forum, and group-task APIs. Instructor reporting and LMS integration remain future scope.
 
 For setup, run the API using [`backend/README.md`](backend/README.md) and the web app using [`frontend/README.md`](frontend/README.md). The local backend defaults to SQLite; PostgreSQL 15+ is configured through `DATABASE_URL`.
 
