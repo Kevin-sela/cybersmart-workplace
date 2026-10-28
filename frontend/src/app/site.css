@@ -1426,3 +1426,232 @@ small { font-size: 13px; }
   .forum-message-list { scroll-behavior:auto; }
 }
 
+/* Small-screen pass: keep every page surface inside the viewport and actions easy to tap. */
+@media(max-width:700px) {
+  .site-header { z-index:10; }
+  .header-inner { width:calc(100% - 32px); grid-template-columns:minmax(0,1fr) auto; column-gap:8px; row-gap:7px; padding:10px 0 0; }
+  .site-header .site-brand { min-width:0; gap:7px; font-size:14px; }
+  .site-header .site-brand .shield-mark { width:27px; height:30px; }
+  .header-actions { min-width:0; gap:6px; }
+  .header-dashboard { padding:7px 6px; font-size:12px; white-space:nowrap; }
+  .header-cta { min-height:38px; padding:0 10px; font-size:12px; white-space:nowrap; }
+  .main-nav { grid-column:1/-1; min-width:0; flex-wrap:wrap; justify-content:center; gap:0 clamp(14px,5vw,30px); padding-bottom:2px; }
+  .main-nav a { min-height:38px; padding:10px 0 8px; font-size:12px; }
+  .main-nav a.nav-current::after { bottom:1px; }
+
+  .hero-inner { width:calc(100% - 36px); min-width:0; grid-template-columns:minmax(0,1fr); gap:22px; padding:30px 0 28px; }
+  .hero-copy { min-width:0; }
+  .hero-kicker { max-width:100%; flex-wrap:wrap; margin-bottom:12px; font-size:11px; }
+  .hero-copy h1 { max-width:13ch; font-size:clamp(34px,9.5vw,44px); line-height:1.08; letter-spacing:-1.25px; overflow-wrap:normal; }
+  .hero-description { max-width:42ch; margin:14px 0 18px; font-size:15px; line-height:1.55; }
+  .hero-button { width:min(100%,420px); min-height:48px; padding:8px 14px; font-size:13px; text-align:center; }
+  .hero-facts { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px 9px; margin-top:22px; }
+  .hero-fact { min-width:0; align-items:flex-start; gap:7px; }
+  .hero-fact:nth-of-type(3) { grid-column:1/-1; }
+  .hero-fact>span:last-child { min-width:0; }
+  .hero-fact strong,.hero-fact small { white-space:normal; }
+  .hero-fact strong { font-size:12px; line-height:1.35; }
+  .hero-fact small { font-size:11px; line-height:1.4; }
+  .hero-visual { min-width:0; justify-content:center; }
+  .hero-image { width:100%; max-height:none; aspect-ratio:1.32; object-fit:cover; }
+
+  .learning-section { padding:38px 0 42px; }
+  .section-wrap { width:calc(100% - 36px); min-width:0; }
+  .learning-heading { min-width:0; align-items:flex-start; gap:12px; margin-bottom:18px; }
+  .learning-heading>div { min-width:0; }
+  .learning-heading h2 { font-size:clamp(24px,7vw,29px); }
+  .learning-heading p:not(.section-kicker) { font-size:13px; line-height:1.5; }
+  .learning-heading .text-link { display:inline-flex; max-width:100%; flex-wrap:wrap; font-size:13px; line-height:1.45; }
+  .module-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+  .path-card { min-width:0; min-height:0; padding:15px; }
+  .path-card h3 { font-size:16px; overflow-wrap:anywhere; }
+  .path-card>p { font-size:13px; line-height:1.5; }
+  .path-card-footer { align-items:flex-start; flex-wrap:wrap; gap:8px; }
+  .path-time { min-width:0; flex:1 1 70px; }
+  .path-card-footer a { display:inline-flex; min-height:40px; max-width:100%; align-items:center; justify-content:center; gap:5px; padding:5px 8px; border:1px solid currentColor; border-radius:5px; font-size:12px; line-height:1.3; text-align:center; }
+
+  .impact-section { grid-template-columns:repeat(2,minmax(0,1fr)); gap:15px 12px; padding:22px 18px; }
+  .impact-intro { min-width:0; grid-column:1/-1; }
+  .impact-intro>div:last-child { min-width:0; }
+  .impact-intro h2 { font-size:20px; }
+  .impact-intro p { font-size:13px; }
+  .impact-item { min-width:0; align-items:flex-start; gap:8px; font-size:12px; }
+  .impact-item strong { min-width:0; overflow-wrap:anywhere; }
+  .site-footer { padding:22px 18px 16px; }
+  .footer-top { min-width:0; align-items:flex-start; flex-direction:column; gap:15px; padding-bottom:17px; }
+  .footer-top nav { min-width:0; flex-wrap:wrap; gap:8px 18px; }
+  .footer-top nav a { min-height:36px; display:inline-flex; align-items:center; }
+  .footer-bottom { min-width:0; flex-direction:column; gap:6px; font-size:11px; line-height:1.5; overflow-wrap:anywhere; }
+
+  .dashboard-page { min-height:100dvh; overflow-x:clip; }
+  .dashboard-header-inner { display:grid; grid-template-columns:auto minmax(0,1fr) auto; grid-template-areas:"brand search actions"; align-items:center; gap:clamp(5px,1.5vw,10px); width:calc(100% - 24px); min-height:58px; padding:6px 0; }
+  .dashboard-header-left { grid-area:brand; min-width:0; gap:6px; }
+  .dashboard-menu-button { width:36px; height:36px; }
+  .dashboard-brand { min-width:0; gap:5px; font-size:12px; }
+  .dashboard-brand .dashboard-mark { width:23px; height:26px; }
+  .dashboard-brand>div { min-width:0; }
+  .dashboard-brand small { font-size:6px; letter-spacing:1px; }
+  .dashboard-search-wrap { grid-area:search; width:100%; min-width:0; flex:1 1 auto; }
+  .dashboard-search { min-width:0; height:36px; gap:6px; padding:0 8px; }
+  .dashboard-search input { min-width:0; font-size:12px; }
+  .dashboard-search kbd { display:none; }
+  .dashboard-header-actions { grid-area:actions; min-width:0; gap:4px; margin:0; }
+  .dashboard-header-actions>.relative>button { width:36px; height:36px; }
+  .dashboard-main,.dashboard-main.detail-page { width:calc(100% - 24px); min-width:0; padding:10px 0 max(22px,env(safe-area-inset-bottom)); }
+  .dashboard-main>* { min-width:0; }
+  .dashboard-welcome { min-height:0; align-items:flex-start; padding:18px 16px; border-radius:11px; }
+  .dashboard-welcome-copy { width:100%; max-width:none; }
+  .dashboard-welcome h1 { max-width:none; font-size:clamp(21px,6.3vw,25px); line-height:1.25; overflow-wrap:anywhere; }
+  .dashboard-welcome p { max-width:42ch; font-size:12px; line-height:1.5; }
+  .dashboard-welcome-art { display:none; }
+  .dashboard-welcome .dashboard-cta { width:100%; min-height:44px; }
+  .dashboard-breadcrumb { min-width:0; flex-wrap:wrap; }
+  .dashboard-breadcrumb .ui-badge { white-space:normal; }
+  .dashboard-cta,.quiz-submit-button,.module-detail-action { max-width:100%; white-space:normal; text-align:center; }
+  .metric-grid,.dashboard-columns,.learning-summary-grid,.overview-insight-grid,.overview-lower-grid,.module-page-list,.module-detail-layout,.module-detail-aside,.profile-settings-layout { min-width:0; }
+  .metric-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+  .metric-card { min-width:0; padding:11px; }
+  .metric-card .ui-card-header { align-items:flex-start; gap:7px; }
+  .metric-card .ui-card-description { overflow-wrap:anywhere; }
+  .metric-value { font-size:clamp(25px,8vw,32px); }
+  .dashboard-columns,.learning-summary-grid,.module-detail-layout,.module-detail-aside,.profile-settings-layout { grid-template-columns:minmax(0,1fr); }
+  .learning-card,.skills-card,.next-lesson-card,.overview-panel,.summary-panel,.module-page-card,.profile-settings-section,.profile-account-card,.profile-session-card { min-width:0; }
+  .course-row { grid-template-columns:30px minmax(0,1fr); align-items:start; gap:7px; }
+  .course-row-action,.course-lock { grid-column:2; justify-self:start; margin-top:2px; }
+  .course-row-action { min-height:40px; flex-wrap:wrap; }
+  .course-row-heading { min-width:0; flex-wrap:wrap; }
+  .course-row-heading h3 { max-width:100%; white-space:normal; overflow-wrap:anywhere; }
+  .course-row-copy>p { overflow-wrap:anywhere; }
+  .learning-card-footer,.dashboard-footer,.overview-card-footer { min-width:0; flex-wrap:wrap; overflow-wrap:anywhere; }
+  .overview-section-heading,.overview-panel-heading,.task-checklist-card .overview-panel-heading { min-width:0; flex-wrap:wrap; align-items:flex-start; }
+  .overview-section-heading>*,.overview-panel-heading>* { min-width:0; }
+  .overview-section-heading>.overview-text-link { flex:0 1 auto; white-space:normal; }
+  .overview-course-list { grid-template-columns:repeat(2,minmax(0,1fr)); min-width:0; }
+  .overview-course-list .module-overview-card { min-width:0; min-height:0; padding:12px; }
+  .module-overview-card-top { min-width:0; flex-wrap:wrap; align-items:flex-start; }
+  .module-overview-card-top .ui-badge { max-width:100%; white-space:normal; }
+  .module-overview-card .ui-card-header,.module-overview-card .ui-card-content { min-width:0; }
+  .module-overview-card .ui-card-title,.module-overview-card .ui-card-description { overflow-wrap:anywhere; }
+  .module-overview-card .ui-card-content { flex-wrap:wrap; }
+  .module-overview-action { min-width:0; min-height:40px; gap:5px; }
+  .latest-quiz-strip,.latest-strip-detail,.latest-quiz-result { min-width:0; flex-wrap:wrap; }
+  .latest-strip-detail { overflow-wrap:anywhere; }
+  .quiz-answer-list button { min-width:0; align-items:flex-start; line-height:1.45; overflow-wrap:anywhere; }
+  .quiz-answer-list button:not(:has(>span)) { white-space:normal; }
+  .task-checklist label { min-width:0; align-items:flex-start; line-height:1.45; overflow-wrap:anywhere; }
+  .task-checklist-card .dashboard-cta,.quiz-question-card .quiz-submit-button { width:100%; min-height:46px; }
+  .profile-settings-section { grid-template-columns:minmax(0,1fr); padding:15px; }
+  .profile-fields,.profile-fields label,.profile-fields input,.profile-fields textarea { min-width:0; max-width:100%; }
+  .profile-settings-actions { min-width:0; flex-wrap:wrap; align-items:stretch; }
+  .profile-settings-actions button,.profile-session-card button { min-height:44px; }
+  .profile-account-details { grid-template-columns:minmax(0,1fr); }
+  .discussion-action { margin-left:0; }
+  .forum-page { width:calc(100% - 20px); min-width:0; margin:0 auto; }
+  .forum-workspace { width:100%; min-width:0; height:auto; min-height:calc(100dvh - 138px); max-height:none; grid-template-columns:minmax(0,1fr); overflow:visible; }
+  .forum-channel-rail,.forum-chat-panel { min-width:0; }
+  .forum-channel-rail nav { min-width:0; }
+  .forum-chat-panel { height:max(390px,calc(100dvh - 220px)); min-height:390px; }
+  .forum-chat-header { min-width:0; }
+  .forum-chat-header h1,.forum-chat-header p { min-width:0; overflow-wrap:anywhere; }
+  .forum-message-list { min-width:0; overflow-x:hidden; }
+  .forum-message-body { min-width:0; }
+  .forum-composer { min-width:0; }
+  .forum-composer textarea { max-width:100%; }
+  .forum-composer-footer>span { min-width:0; line-height:1.4; }
+  .forum-channel-form { max-width:calc(100vw - 52px); }
+}
+
+@media(max-width:520px) {
+  .header-inner,.hero-inner,.section-wrap { width:calc(100% - 28px); }
+  .header-actions { gap:3px; }
+  .header-dashboard { padding-inline:4px; font-size:11px; }
+  .header-cta { min-height:36px; padding-inline:8px; font-size:11px; }
+  .main-nav { column-gap:clamp(10px,4vw,20px); }
+  .main-nav a { font-size:11px; }
+  .hero-copy h1 { max-width:12ch; font-size:clamp(32px,10vw,40px); }
+  .hero-description { font-size:14px; }
+  .hero-facts { gap:10px 7px; }
+  .hero-fact { gap:6px; }
+  .fact-icon { width:27px; height:27px; font-size:15px; }
+  .hero-fact strong { font-size:11px; }
+  .hero-fact small { font-size:10px; }
+  .module-grid { grid-template-columns:minmax(0,1fr); gap:9px; }
+  .path-card { padding:14px; }
+  .path-card-footer { flex-direction:row; align-items:center; }
+  .path-card-footer a { min-height:44px; }
+  .impact-section { gap:13px 9px; padding-inline:14px; }
+  .impact-item { font-size:11px; }
+  .footer-top nav { gap:5px 13px; }
+  .dashboard-header-inner { width:calc(100% - 18px); gap:5px; }
+  .dashboard-header-left { gap:4px; }
+  .dashboard-menu-button,.dashboard-header-actions>.relative>button { width:34px; height:36px; }
+  .dashboard-brand { gap:4px; font-size:11px; }
+  .dashboard-brand .dashboard-mark { width:21px; height:24px; }
+  .dashboard-brand small { display:none; }
+  .dashboard-header-actions { gap:2px; }
+  .dashboard-user-pill { max-width:34px; min-width:30px; height:34px; overflow:hidden; justify-content:center; padding:2px; }
+  .dashboard-user-name,.dashboard-user-pill .user-chevron,.dashboard-user-pill .dashboard-learner-badge { display:none; }
+  .dashboard-search { gap:4px; padding-inline:6px; }
+  .dashboard-search input { font-size:11px; }
+  .dashboard-search input::placeholder { color:transparent; }
+  .dashboard-main,.dashboard-main.detail-page { width:calc(100% - 20px); }
+  .dashboard-welcome { padding:16px 13px; }
+  .dashboard-welcome h1 { font-size:21px; }
+  .dashboard-welcome-kicker { font-size:8px; letter-spacing:.8px; }
+  .dashboard-welcome p { font-size:11px; }
+  .dashboard-breadcrumb { font-size:10px; }
+  .metric-grid { gap:7px; }
+  .metric-card { min-height:126px; padding:9px; }
+  .metric-card .metric-foot { font-size:10px; }
+  .learning-card-header { padding-inline:12px; }
+  .course-list { padding-inline:12px; }
+  .learning-card-footer { padding-inline:12px; }
+  .overview-course-list { grid-template-columns:minmax(0,1fr); gap:8px; }
+  .overview-course-list .module-overview-card { padding:13px; }
+  .overview-section-heading.course-cards-heading { align-items:flex-start; flex-wrap:wrap; }
+  .overview-progress-top { grid-template-columns:minmax(0,1fr) minmax(80px,94px); }
+  .overview-actions { min-width:0; flex-wrap:wrap; }
+  .overview-primary-action,.overview-secondary-action { max-width:100%; white-space:normal; }
+  .overview-milestones { grid-template-columns:repeat(2,minmax(0,1fr)); row-gap:12px; }
+  .overview-milestones::before { display:none; }
+  .progress-overview-content { grid-template-columns:minmax(82px,96px) minmax(0,1fr); }
+  .progress-overview-stats { min-width:0; padding-left:8px; }
+  .detail-stat-card { min-width:0; padding:13px; }
+  .progress-detail-header { min-width:0; flex-wrap:wrap; align-items:flex-start; }
+  .progress-detail-header>div { min-width:0; }
+  .progress-detail-header .ui-badge { max-width:100%; white-space:normal; }
+  .forum-workspace { min-height:calc(100dvh - 126px); }
+  .forum-chat-panel { height:max(360px,calc(100dvh - 204px)); min-height:360px; }
+  .forum-chat-header { gap:7px; padding-inline:9px; }
+  .forum-chat-header>div { flex:1; }
+  .forum-chat-header p { max-width:100%; }
+  .forum-chat-online { max-width:60px; font-size:9px; white-space:normal; text-align:right; }
+  .forum-composer { margin-inline:8px; }
+  .forum-composer-footer>span { max-width:calc(100% - 52px); font-size:9px; }
+  .profile-session-card { align-items:flex-start; flex-direction:column; gap:12px; }
+}
+
+@media(max-width:360px) {
+  .site-brand { font-size:13px; }
+  .header-inner { width:calc(100% - 24px); }
+  .hero-fact:nth-of-type(3) { grid-column:1/-1; }
+  .impact-section { grid-template-columns:minmax(0,1fr); }
+  .impact-intro { grid-column:auto; }
+  .impact-item { align-items:center; }
+  .dashboard-header-inner { width:calc(100% - 14px); grid-template-columns:auto minmax(0,1fr) auto; gap:4px; }
+  .dashboard-brand>div { display:none; }
+  .dashboard-menu-button,.dashboard-header-actions>.relative>button { width:32px; height:34px; }
+  .dashboard-search { padding-inline:5px; }
+  .dashboard-search input::placeholder { color:transparent; }
+  .dashboard-user-pill { width:29px; min-width:29px; }
+  .metric-grid { grid-template-columns:minmax(0,1fr); }
+  .metric-card { min-height:112px; padding:12px; }
+  .progress-overview-content { grid-template-columns:82px minmax(0,1fr); gap:6px; }
+  .progress-overview-content .progress-donut { width:80px; }
+  .progress-overview-stat strong { font-size:11px; }
+  .forum-channel-heading { margin-inline:2px; }
+  .forum-channel-button { max-width:calc(100vw - 76px); }
+  .forum-message-body { max-width:calc(100% - 42px); }
+  .forum-composer-footer { align-items:flex-end; }
+}
+
