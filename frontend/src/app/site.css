@@ -1893,7 +1893,8 @@ small { font-size: 13px; }
 .overview-course-list .module-overview-card {
   min-height:158px;
   padding:14px;
-  border:1px solid #e6e5df;
+  border:1px solid #eeede8;
+  border-left-color:#f4f3ef;
   border-radius:12px;
   background:var(--white);
   box-shadow:none;
@@ -1909,11 +1910,14 @@ small { font-size: 13px; }
   width:32px;
   height:32px;
   border-radius:9px;
-  background:#f0f2f5;
-  color:#596579;
+  background:var(--brand-royal);
+  color:var(--white);
   font-size:12px;
   font-weight:650;
 }
+.overview-course-list .module-overview-card-2 .module-overview-number { background:var(--brand-ocean); }
+.overview-course-list .module-overview-card-3 .module-overview-number { background:var(--brand-jade); }
+.overview-course-list .module-overview-card-4 .module-overview-number { background:var(--brand-nav); }
 .overview-course-list .module-overview-divider { display:none; }
 .overview-course-list .module-overview-copy { gap:2px; }
 .overview-course-list .module-overview-card .ui-card-title { font-size:13px; font-weight:600; letter-spacing:-.1px; }
