@@ -61,13 +61,14 @@ export default function DashboardPage() {
         ? { title: "Choose a safe action", week: 2, minutes: 8 }
         : { title: "First steps: spot a suspicious message", week: 1, minutes: 8 };
   const greeting = `${greetingPrefix}${profile ? `, ${profile.full_name.split(" ")[0]}` : ""}`;
+  const welcomeName = profile?.full_name.trim().split(/\s+/)[0] ?? "";
   const confettiColors = ["coral", "gold", "jade", "violet", "pink", "blue"];
 
   return <div className="dashboard-page">
     <DashboardHeader />
     <main className="dashboard-main overview-main" id="dashboard">
       <section className="dashboard-greeting dashboard-welcome" aria-label="Welcome">
-        <div className="dashboard-welcome-copy"><span className="dashboard-welcome-kicker"><i aria-hidden="true"/> YOUR LEARNING SPACE</span><h1><span className="sr-only">{greeting}</span><span className="welcome-confetti-text" aria-hidden="true">{Array.from(greetingPrefix).map((letter, index) => <span key={index} className={`welcome-letter welcome-letter-${confettiColors[index % confettiColors.length]}`} style={{ animationDelay: `${index * 35}ms` }}>{letter === " " ? "\u00a0" : letter}</span>)}{profile && <span className="welcome-name">, {profile.full_name.split(" ")[0]}</span>}</span></h1><p>Small steps make a safer workplace. Pick up where you left off.</p></div>
+        <div className="dashboard-welcome-copy"><span className="dashboard-welcome-kicker"><i aria-hidden="true"/> YOUR LEARNING SPACE</span><h1><span className="sr-only">{greeting}</span><span className="welcome-confetti-text" aria-hidden="true">{Array.from(greetingPrefix).map((letter, index) => <span key={index} className={`welcome-letter welcome-letter-${confettiColors[index % confettiColors.length]}`} style={{ animationDelay: `${index * 35}ms` }}>{letter === " " ? "\u00a0" : letter}</span>)}{welcomeName && <span className="welcome-name">, {Array.from(welcomeName).map((letter, index) => <span key={`${letter}-${index}`} className="welcome-name-letter" style={{ animationDelay: `${index * 55}ms` }}>{letter}</span>)}</span>}</span></h1><p>Small steps make a safer workplace. Pick up where you left off.</p></div>
         <div className="dashboard-welcome-art" aria-hidden="true"><span className="welcome-confetti-piece welcome-confetti-one"/><span className="welcome-confetti-piece welcome-confetti-two"/><span className="welcome-confetti-piece welcome-confetti-three"/><span className="welcome-confetti-piece welcome-confetti-four"/><span className="welcome-confetti-piece welcome-confetti-five"/></div>
       </section>
       <LearningOverviewSummary progress={progress} completedModules={completedModules} totalModules={totalModules} completedLessons={completedLessons} totalLessons={totalLessons} completedActivities={completedActivities} totalActivities={totalActivities} nextLesson={nextLesson} loading={progressLoading}/>

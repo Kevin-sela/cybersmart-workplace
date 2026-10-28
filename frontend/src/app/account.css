@@ -85,6 +85,15 @@
   .account-email-row{font-size:13px;padding:9px 10px}
 }
 
+/* Keep sign-in and profile copy aligned with the calmer app type scale. */
+.account-card h1{font-size:28px;line-height:1.25}
+.account-card .account-intro{font-size:13.5px;line-height:1.6}
+.account-card .account-switch{font-size:13px;line-height:1.55}
+.account-card .account-terms{font-size:11.5px;line-height:1.55}
+.profile-settings-heading h1{font-size:28px}
+.profile-settings-heading>p:last-child,.profile-section-copy p,.profile-danger-zone p{font-size:13px;line-height:1.6}
+@media(max-width:480px){.account-card h1{font-size:25px}.account-card .account-intro{font-size:13px}}
+
 /* Profile settings: compact navigation with a high-contrast identity rail. */
 .profile-settings-page{color:#202123}
 .profile-settings-heading{padding:0 0 22px;border-bottom:1px solid #e5e5e5}
@@ -179,3 +188,8 @@
 @media(max-width:420px){.dashboard-profile-chip{gap:4px;padding-right:5px}.dashboard-profile-chip .profile-chip-avatar{width:30px;height:30px}.dashboard-profile-chip .account-profile-chip-copy{max-width:70px}.dashboard-profile-chip .account-profile-chip-name{max-width:70px;font-size:9px}.dashboard-profile-chip .account-profile-chip-badge{padding:2px 5px;font-size:7px}.dashboard-profile-chip .account-profile-chip-chevron{width:12px}}
 @media(max-width:620px){.site-profile-chip{min-height:40px;gap:6px;padding:3px 8px 3px 4px}.site-profile-chip .profile-chip-avatar{width:32px;height:32px}.site-profile-chip .account-profile-chip-name{font-size:10px}.site-profile-chip .account-profile-chip-badge{padding:2px 6px;font-size:8px}.site-profile-chip .account-profile-chip-chevron{width:13px;margin-left:0}}
 @media(max-width:390px){.site-profile-chip{width:39px;min-width:39px;justify-content:center;padding:3px}.site-profile-chip .profile-chip-avatar{width:30px;height:30px}.site-profile-chip .account-profile-chip-copy,.site-profile-chip .account-profile-chip-chevron{display:none}}
+
+/* Final account typography refinements. */
+.profile-settings-heading h1{font-size:28px}
+.profile-settings-heading>p:last-child,.profile-section-copy p,.profile-danger-zone p{font-size:13px;line-height:1.6}
+@media(max-width:480px){.profile-settings-heading h1{font-size:26px}}

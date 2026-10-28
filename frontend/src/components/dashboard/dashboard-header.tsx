@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { Bell, BookOpenText, Dumbbell, Home, MessagesSquare, Search, Settings, UserCircle2 } from "lucide-react";
+import { Bell, BookOpenText, Home, MessagesSquare, NotebookPen, Search, Settings, UserCircle2 } from "lucide-react";
 
 import { api, UserProfile } from "@/services/api";
 import { enablePushNotifications, isPushEnabled, loadOneSignal } from "./push-notifications";
@@ -36,7 +36,7 @@ function Icon({ kind }: { kind: NavItem["icon"] }) {
     case "modules":
       return <BookOpenText className={className} />;
     case "practice":
-      return <Dumbbell className={className} />;
+      return <NotebookPen className={className} />;
     case "discussion":
       return <MessagesSquare className={className} />;
     case "settings":
@@ -260,7 +260,7 @@ export function DashboardHeader({ active }: DashboardHeaderProps) {
             {userLoading ? (
               <span className="h-9 w-9 animate-pulse rounded-full bg-muted" aria-label="Loading account" />
             ) : (
-              <ProfileChip className="dashboard-profile-chip" name={user?.full_name ?? "Sign in"} badge={user ? `${user.role[0].toUpperCase()}${user.role.slice(1)}` : "Guest"} />
+              <ProfileChip className="dashboard-profile-chip" href={user ? "/dashboard/profile" : "/sign-in?next=%2Fdashboard%2Fprofile"} name={user?.full_name ?? "Sign in"} badge={user ? `${user.role[0].toUpperCase()}${user.role.slice(1)}` : "Guest"} ariaLabel={user ? "Open profile settings" : "Sign in to open profile settings"} />
             )}
           </div>
         </div>

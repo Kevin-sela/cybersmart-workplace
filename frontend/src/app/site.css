@@ -695,16 +695,19 @@ a:focus-visible, button:focus-visible, summary:focus-visible { outline: 3px soli
 .dashboard-welcome .welcome-letter { display:inline-block; animation:welcome-letter-in .45s cubic-bezier(.2,.75,.25,1) both; }
 .dashboard-welcome .welcome-letter-coral,.dashboard-welcome .welcome-letter-gold,.dashboard-welcome .welcome-letter-jade,.dashboard-welcome .welcome-letter-violet,.dashboard-welcome .welcome-letter-pink,.dashboard-welcome .welcome-letter-blue { color:var(--brand-royal); }
 .dashboard-welcome .welcome-name { color:var(--brand-nav); }
+.dashboard-welcome .welcome-name-letter { display:inline-block; animation:welcome-name-ripple .78s cubic-bezier(.2,.75,.25,1) both; }
+@keyframes welcome-name-ripple { 0% { translate:0 0; color:var(--brand-nav); } 35% { translate:0 -4px; color:var(--brand-ocean); } 70%,100% { translate:0 0; color:var(--brand-nav); } }
 @keyframes welcome-letter-in { from { opacity:.35; transform:translateY(5px); } to { opacity:1; transform:translateY(0); } }
 .dashboard-welcome p { margin-top:6px; color:var(--slate-grey); font-size:12px; }
 .dashboard-welcome-art { position:absolute; top:50%; right:7%; width:164px; height:140px; transform:translateY(-50%); }
-.welcome-confetti-piece { position:absolute; display:block; border-radius:4px; animation:welcome-confetti-drift 3s ease-in-out infinite; }
+.welcome-confetti-piece { position:absolute; display:block; border-radius:4px; animation:welcome-confetti-burst .72s cubic-bezier(.2,.75,.25,1) both,welcome-confetti-drift 3.4s ease-in-out .72s infinite; }
 .welcome-confetti-one { top:24px; right:28px; width:16px; height:8px; background:#e9869b; transform:rotate(-25deg); }
 .welcome-confetti-two { top:53px; left:37px; width:9px; height:9px; border-radius:50%; background:#e4b54d; animation-delay:.5s; }
 .welcome-confetti-three { top:78px; right:35px; width:9px; height:16px; background:#61b09a; transform:rotate(28deg); animation-delay:1s; }
 .welcome-confetti-four { bottom:21px; left:66px; width:14px; height:8px; background:#8390df; transform:rotate(32deg); animation-delay:1.5s; }
 .welcome-confetti-five { top:36px; left:81px; width:7px; height:7px; border-radius:2px; background:#d787bf; transform:rotate(45deg); animation-delay:.8s; }
 @keyframes welcome-confetti-drift { 0%,100% { translate:0 0; } 50% { translate:0 -5px; } }
+@keyframes welcome-confetti-burst { from { opacity:0; scale:.45; translate:0 10px; } to { opacity:.9; scale:1; translate:0 0; } }
 .learning-summary-grid { display:grid; grid-template-columns:minmax(0,1.55fr) minmax(160px,.78fr) minmax(205px,.92fr); gap:9px; }
 .summary-panel { min-width:0; min-height:175px; padding:13px 14px; border:1px solid #e3e7e9; border-radius:7px; background:#fff; }
 .summary-panel-heading { display:flex; align-items:center; justify-content:space-between; gap:8px; }
@@ -1153,6 +1156,15 @@ small { font-size: 13px; }
 .course-video-card-3 .course-video-thumbnail { background:radial-gradient(circle at 78% 22%,rgb(42 157 143 / 38%),transparent 27%),linear-gradient(135deg,var(--brand-ocean),var(--brand-nav) 70%); }
 .course-video-card-4 .course-video-thumbnail { background:radial-gradient(circle at 78% 22%,rgb(233 196 106 / 31%),transparent 27%),linear-gradient(135deg,var(--brand-royal),var(--brand-nav) 70%); }
 @media(max-width:600px) { .course-video-section { margin:24px 0; } .course-video-section-heading { align-items:flex-start; flex-direction:column; gap:8px; } .course-video-coming { margin:0; } .course-video-thumb-label { top:9px; left:10px; font-size:8px; } .course-video-art-window { min-width:145px; } .course-video-art-icon { width:44px; height:44px; } .course-video-art-icon svg { width:26px; height:26px; } .course-video-play { width:40px; height:40px; } .course-video-copy { padding:12px; } }
+
+/* Real, linked course videos use YouTube's own thumbnails. */
+.course-lesson-video { min-width:0; margin:24px 0; padding:16px; border:1px solid var(--line); border-radius:12px; background:var(--white); box-shadow:0 5px 16px rgb(46 41 78 / 5%); animation:dashboard-enter .28s ease both; }
+.course-lesson-video-copy .eyebrow { margin:0 0 5px; color:var(--brand-ocean); font-size:10px; font-weight:700; letter-spacing:.08em; }
+.course-lesson-video-copy h2 { margin:0; color:var(--brand-nav); font-size:18px; line-height:1.35; }
+.course-lesson-video-copy>p:last-child { margin:5px 0 12px; color:var(--slate-grey); font-size:12px; line-height:1.5; }
+.course-lesson-video-frame { position:relative; width:100%; overflow:hidden; aspect-ratio:16/9; border-radius:8px; background:#161b27; }
+.course-lesson-video-frame iframe { position:absolute; inset:0; width:100%; height:100%; border:0; }
+@media(max-width:520px) { .course-lesson-video { margin:20px 0; padding:12px; border-radius:10px; } .course-lesson-video-copy h2 { font-size:16px; } }
 
 /* Shared responsive foundations for every signed-in learning screen. */
 .dashboard-page,.dashboard-main,.detail-page,.overview-main,.forum-page { min-width:0; }
@@ -1707,5 +1719,63 @@ small { font-size: 13px; }
   .dashboard-progress-stat { padding:7px; }
   .dashboard-progress-stat>div:first-child { width:29px; height:29px; }
   .dashboard-progress-stat>div:last-child p:first-child { font-size:17px; }
+}
+
+/* Calm the type scale slightly without dropping below comfortable reading sizes. */
+.landing-page { font-size:15px; line-height:1.55; }
+.landing-page .hero-copy h1 { font-size:clamp(40px,4.8vw,55px); letter-spacing:-1.45px; }
+.landing-page .hero-description { max-width:500px; font-size:16px; line-height:1.6; }
+.landing-page .learning-heading h2 { font-size:30px; }
+.landing-page .path-card h3 { font-size:17px; }
+.landing-page .path-card>p { font-size:13px; line-height:1.6; }
+.landing-page .path-card { animation:dashboard-enter .36s ease both; }
+.landing-page .path-card:nth-child(2) { animation-delay:45ms; }
+.landing-page .path-card:nth-child(3) { animation-delay:90ms; }
+.landing-page .path-card:nth-child(4) { animation-delay:135ms; }
+.landing-page .impact-intro h2 { font-size:21px; }
+.landing-page .impact-intro p { font-size:13px; line-height:1.6; }
+.landing-page .text-link { font-size:13px; }
+.landing-page .path-card-footer a { font-size:12px; }
+
+.dashboard-page { font-size:14px; line-height:1.6; }
+.dashboard-page .text-base { font-size:15px; }
+.dashboard-page .text-sm { font-size:13.5px; line-height:1.55; }
+.dashboard-page .text-xs { font-size:11.5px; line-height:1.5; }
+.dashboard-page .text-2xl { font-size:22px; line-height:1.3; }
+.dashboard-page .text-3xl { font-size:28px; line-height:1.25; }
+.dashboard-page .dashboard-welcome h1 { font-size:clamp(26px,2.8vw,34px); line-height:1.22; }
+.dashboard-page .dashboard-welcome p { font-size:13px; line-height:1.6; }
+.dashboard-page .ui-card-title { font-size:16px; line-height:1.4; }
+.dashboard-page .ui-card-description { font-size:12.5px; line-height:1.6; }
+.dashboard-page .dashboard-cta { font-size:12.5px; }
+.dashboard-page .module-overview-card .ui-card-title { font-size:14px; line-height:1.4; }
+.dashboard-page .module-overview-card .ui-card-description { font-size:11.5px; line-height:1.5; }
+.dashboard-page .overview-section-heading h2 { font-size:18px; }
+.lesson-shell { font-size:15px; line-height:1.65; }
+.lesson-article h1 { font-size:clamp(28px,3vw,32px); line-height:1.2; }
+.lesson-article h2 { font-size:20px; line-height:1.35; }
+
+@media(max-width:700px) {
+  .landing-page .hero-copy h1 { font-size:clamp(30px,9vw,37px); line-height:1.1; letter-spacing:-1px; }
+  .landing-page .hero-description { font-size:14px; line-height:1.6; }
+  .landing-page .learning-heading h2 { font-size:25px; }
+  .landing-page .path-card h3 { font-size:15px; line-height:1.4; }
+  .landing-page .path-card>p { font-size:13px; line-height:1.6; }
+  .landing-page .section-kicker,.landing-page .hero-kicker { font-size:12px; }
+  .landing-page .impact-intro h2 { font-size:19px; }
+  .dashboard-page .dashboard-welcome h1 { font-size:clamp(20px,5.8vw,23px); }
+  .dashboard-page .ui-card-title { font-size:15px; }
+  .dashboard-page .ui-card-description { font-size:12px; }
+  .dashboard-page .text-sm { font-size:13px; }
+  .dashboard-page .text-2xl { font-size:21px; }
+  .lesson-shell { font-size:14px; line-height:1.65; }
+  .lesson-article h1 { font-size:27px; }
+  .lesson-article h2 { font-size:19px; }
+}
+
+@media(max-width:380px) {
+  .landing-page .hero-copy h1 { font-size:30px; }
+  .landing-page .hero-description,.landing-page .path-card>p { font-size:13px; }
+  .dashboard-page .dashboard-welcome h1 { font-size:20px; }
 }
 

@@ -4,6 +4,8 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useEffect, useRef, useState } from "react";
 import { api } from "@/services/api";
+import { CourseVideo } from "@/components/course/course-video";
+import { COURSE_VIDEOS } from "@/lib/course";
 
 export default function LessonPage() {
   const [complete, setComplete] = useState(false);
@@ -55,6 +57,7 @@ export default function LessonPage() {
           <h2 id="what-to-do">What to do</h2>
           <p>Do not reply, open the attachment, or follow the link while you are unsure. Verify the request using a contact method you already trust, and follow your workplace process for reporting suspicious messages. If you already clicked or shared information, contact your IT or security team promptly.</p>
           <section className="quick-check" id="quick-check"><p className="eyebrow">Quick check</p><h2>What is the safest first step?</h2><p>You receive an unexpected message saying your account will close in ten minutes unless you sign in through its link.</p><details><summary>Show a safe response</summary><p>Pause. Do not use the link. Go to the service through a known bookmark or contact your IT team using a trusted channel.</p></details></section>
+          <CourseVideo video={COURSE_VIDEOS.phishing} />
           <div className="lesson-complete-row"><div>{confirmed && <p className="saved-message" role="status">✓ Lesson progress saved on this device.</p>}<p className="completion-hint">You can revisit this lesson whenever you need a reminder.</p></div><Button className={`button ${complete ? "button-done" : "button-primary"}`} type="button" disabled={saving || complete} onClick={markComplete}>{saving ? "Saving…" : complete ? "Lesson completed ✓" : "Mark lesson complete →"}</Button></div>
         </article>
         <aside className="lesson-aside"><section className="lesson-outline"><p className="eyebrow">In this lesson</p><a className="outline-active" href="#spot-clues">01 &nbsp; Spot the clues</a><a href="#what-to-do">02 &nbsp; What to do</a><a href="#quick-check">03 &nbsp; Quick check</a><div className="outline-divider"/><p className="outline-meta"><span>◷</span> About 8 minutes</p><p className="outline-meta"><span>▤</span> Text lesson</p></section><section className="download-card"><p className="eyebrow">Low data?</p><h2>Read it offline</h2><p>Download a small plain-text copy of this lesson.</p><a href="/lesson-one.txt" download>Download text <span aria-hidden="true">↓</span></a></section></aside>
