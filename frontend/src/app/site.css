@@ -1889,3 +1889,43 @@ small { font-size: 13px; }
   .dashboard-page .dashboard-welcome h1 { font-size:20px; }
 }
 
+/* Keep the dashboard module cards quiet and easy to scan. */
+.overview-course-list .module-overview-card {
+  min-height:158px;
+  padding:14px;
+  border:1px solid #e6e5df;
+  border-radius:12px;
+  background:var(--white);
+  box-shadow:none;
+  animation:none;
+  transition:border-color .16s ease,background-color .16s ease;
+}
+.overview-course-list .module-overview-card::before { display:none; }
+.overview-course-list .module-overview-main { grid-template-columns:34px minmax(0,1fr); gap:10px; }
+.overview-course-list .module-overview-number,
+.overview-course-list .module-overview-card-2 .module-overview-number,
+.overview-course-list .module-overview-card-3 .module-overview-number,
+.overview-course-list .module-overview-card-4 .module-overview-number {
+  width:32px;
+  height:32px;
+  border-radius:9px;
+  background:#f0f2f5;
+  color:#596579;
+  font-size:12px;
+  font-weight:650;
+}
+.overview-course-list .module-overview-divider { display:none; }
+.overview-course-list .module-overview-copy { gap:2px; }
+.overview-course-list .module-overview-card .ui-card-title { font-size:13px; font-weight:600; letter-spacing:-.1px; }
+.overview-course-list .module-overview-complete { font-size:10px; }
+.overview-course-list .module-overview-card>.ui-card-description { margin:9px 0 12px; color:var(--slate-grey); font-size:11px; line-height:1.45; }
+.overview-course-list .module-overview-progress { gap:10px; }
+.overview-course-list .module-overview-progress>strong { color:#596579; font-size:13px; font-weight:600; }
+.overview-course-list .module-overview-track { height:5px; background:#eceeea; }
+.overview-course-list .module-overview-track span { background:#8aada5; }
+.overview-course-list .module-page-link:hover .module-overview-card { transform:none; border-color:#cbd6d1; background:#fff; box-shadow:none; }
+.overview-course-list .module-page-link:focus-visible { outline:2px solid var(--brand-ocean); outline-offset:3px; }
+@media(max-width:700px) {
+  .overview-course-list .module-overview-card { min-height:140px; }
+}
+
