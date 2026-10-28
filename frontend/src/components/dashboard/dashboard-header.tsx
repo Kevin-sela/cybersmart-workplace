@@ -1,11 +1,15 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
+import { Bell, ChevronDown, Home, MessageSquareText, Settings, ShieldCheck, Sparkles, UserCircle2 } from "lucide-react";
+
 import { api, UserProfile } from "@/services/api";
 import { enablePushNotifications, isPushEnabled, loadOneSignal } from "./push-notifications";
 import { ProfileChip } from "@/components/account/profile-chip";
+import { Button } from "@/components/ui/button";
+
 
 type DashboardHeaderProps = { active?: "overview" | "modules" | "progress" };
 type NavItem = { label: string; href: string; icon: "home" | "modules" | "practice" | "discussion" | "settings" | "user" };
@@ -18,20 +22,32 @@ const navItems: NavItem[] = [
   { label: "Settings", href: "/dashboard/settings", icon: "settings" },
 ];
 
-function Icon({ kind }: { kind: NavItem["icon"] }) {
-  const paths = {
-    home: <><path d="m3 10 9-7 9 7"/><path d="M5 9v11h14V9M9 20v-6h6v6"/></>,
-    modules: <><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></>,
-    practice: <><path d="M4 19V5m0 14h16"/><path d="m7 15 4-4 3 2 5-6"/></>,
-    discussion: <><path d="M20 11.5a7.5 7.5 0 0 1-8 7.5 8.7 8.7 0 0 1-3.5-.7L4 20l1.4-3.3A7.1 7.1 0 0 1 4 12c0-4.1 3.6-7.5 8-7.5s8 3.1 8 7Z"/></>,
-    settings: <><circle cx="12" cy="12" r="3"/><path d="M19.4 15a7.5 7.5 0 0 0 0-6l1.3-1-1.8-3.1-1.6.7a7.5 7.5 0 0 0-5.2-3L11.8.8h-3.6L8 2.6a7.5 7.5 0 0 0-5.2 3l-1.6-.7L-.6 8l1.3 1a7.5 7.5 0 0 0 0 6l-1.3 1 1.8 3.1 1.6-.7a7.5 7.5 0 0 0 5.2 3l.2 1.8h3.6l.3-1.8a7.5 7.5 0 0 0 5.2-3l1.6.7 1.8-3.1z" transform="translate(2 0) scale(.9)"/></>,
-    user: <><circle cx="12" cy="8" r="3.5"/><path d="M5 20a7 7 0 0 1 14 0"/></>,
-  };
-  return <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">{paths[kind]}</svg>;
+function Mark() {
+  return (
+    <div className="flex h-8 w-8 items-center justify-center rounded-xl border border-primary/30 bg-primary/5 text-primary shadow-sm">
+      <ShieldCheck className="h-4 w-4" />
+    </div>
+  );
 }
 
-function Mark() {
-  return <svg className="dashboard-mark" viewBox="0 0 40 44" aria-hidden="true"><path d="M20 2 36 8v12c0 10-6.4 17-16 22C10.4 37 4 30 4 20V8L20 2Z" fill="currentColor"/><path d="m13 21 5 5 10-11" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>;
+function Icon({ kind }: { kind: NavItem["icon"] }) {
+  const className = "h-4 w-4";
+  switch (kind) {
+    case "home":
+      return <Home className={className} />;
+    case "modules":
+      return <Sparkles className={className} />;
+    case "practice":
+      return <MessageSquareText className={className} />;
+    case "discussion":
+      return <MessageSquareText className={className} />;
+    case "settings":
+      return <Settings className={className} />;
+    case "user":
+      return <UserCircle2 className={className} />;
+    default:
+      return <Home className={className} />;
+  }
 }
 
 export function DashboardHeader({ active }: DashboardHeaderProps) {
@@ -47,6 +63,7 @@ export function DashboardHeader({ active }: DashboardHeaderProps) {
   const pathname = usePathname();
   const [user, setUser] = useState<UserProfile | null>(null);
   const [userLoading, setUserLoading] = useState(true);
+
   useEffect(() => {
     let mounted = true;
     api.me().then(value => { if (mounted) setUser(value); }).catch(() => { if (mounted) setUser(null); }).finally(() => { if (mounted) setUserLoading(false); });
@@ -64,7 +81,11 @@ export function DashboardHeader({ active }: DashboardHeaderProps) {
   useEffect(() => {
     if (!sidebarOpen || !isMobile) return;
     const closeOnEscape = (event: KeyboardEvent) => { if (event.key === "Escape") setSidebarOpen(false); };
-    const closeOutside = (event: PointerEvent) => { if (event.target instanceof Node && !menuRef.current?.contains(event.target) && !sidebarRef.current?.contains(event.target)) setSidebarOpen(false); };
+    const closeOutside = (event: PointerEvent) => {
+      if (event.target instanceof Node && !menuRef.current?.contains(event.target) && !sidebarRef.current?.contains(event.target)) {
+        setSidebarOpen(false);
+      }
+    };
     document.addEventListener("keydown", closeOnEscape);
     document.addEventListener("pointerdown", closeOutside);
     return () => { document.removeEventListener("keydown", closeOnEscape); document.removeEventListener("pointerdown", closeOutside); };
@@ -81,10 +102,7 @@ export function DashboardHeader({ active }: DashboardHeaderProps) {
 
   useEffect(() => {
     if (!notificationsOpen || !process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID) return;
-    loadOneSignal().then(() => {
-      // OneSignal owns the subscription and permission state after initialization.
-      setPushEnabled(isPushEnabled());
-    }).catch(() => setPushMessage("Could not connect to the push notification service."));
+    loadOneSignal().then(() => setPushEnabled(isPushEnabled())).catch(() => setPushMessage("Could not connect to the push notification service."));
   }, [notificationsOpen]);
 
   const turnOnPush = async () => {
@@ -96,36 +114,147 @@ export function DashboardHeader({ active }: DashboardHeaderProps) {
       setPushMessage(isPushEnabled() ? "Push notifications are enabled on this device." : "Permission wasn’t granted. You can change this in your browser settings.");
     } catch (error) {
       setPushMessage(error instanceof Error ? error.message : "Could not enable push notifications.");
-    } finally { setPushBusy(false); }
+    } finally {
+      setPushBusy(false);
+    }
   };
 
-  const isCurrent = (item: NavItem) => pathname ? pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(`${item.href}/`)) : (active === "overview" && item.href === "/dashboard") || (active === "modules" && item.href === "/dashboard/modules") || (active === "progress" && item.href === "/dashboard/progress");
+  const isCurrent = (item: NavItem) => pathname
+    ? pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(`${item.href}/`))
+    : (active === "overview" && item.href === "/dashboard");
 
-  return <>
-    <header className="dashboard-header">
-      <div className="dashboard-header-inner">
-        <div className="dashboard-menu-control" ref={menuRef}>
-          <button className="dashboard-menu-button" type="button" aria-expanded={sidebarOpen} aria-controls="dashboard-learning-sidebar" aria-label={sidebarOpen ? "Close learning navigation" : "Open learning navigation"} onClick={() => setSidebarOpen(!sidebarOpen)}>
-            <span className={`hamburger-icon ${sidebarOpen ? "hamburger-open" : ""}`} aria-hidden="true"><i/><i/><i/></span>
-          </button>
-        </div>
-        <Link className="dashboard-brand" href="/" aria-label="CyberSmart Workplace course website" title="Go to the CyberSmart course website"><Mark/><span>CyberSmart<small>WORKPLACE LEARNING</small></span></Link>
-        <div className="dashboard-header-actions">
-          <div className="dashboard-notification-wrap" ref={notificationsRef}>
-            <button type="button" className="dashboard-notification-button" aria-label="Notifications" aria-expanded={notificationsOpen} onClick={()=>setNotificationsOpen(!notificationsOpen)}>
-              <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg>
-            </button>
-            {notificationsOpen&&<div className="dashboard-notification-popover" role="dialog" aria-label="Notification settings"><strong>Notifications</strong><p>Get course updates and reminders on this device.</p>{process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID ? <><button type="button" className="dashboard-push-button" onClick={turnOnPush} disabled={pushBusy || pushEnabled}>{pushBusy ? "Connecting…" : pushEnabled ? "Push notifications enabled" : "Enable push notifications"}</button>{pushMessage&&<small>{pushMessage}</small>}</> : <small>Push setup is pending. Add NEXT_PUBLIC_ONESIGNAL_APP_ID to the frontend environment.</small>}</div>}
+  return (
+    <>
+      <header className="sticky top-0 z-40 border-b border-border/80 bg-background/80 backdrop-blur-xl">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
+          <div className="flex items-center gap-3">
+            <div className="relative" ref={menuRef}>
+              <button
+                type="button"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-card text-foreground shadow-sm transition hover:border-primary/30 hover:bg-primary/5 md:hidden"
+                aria-expanded={sidebarOpen}
+                aria-controls="dashboard-learning-sidebar"
+                aria-label={sidebarOpen ? "Close learning navigation" : "Open learning navigation"}
+                onClick={() => setSidebarOpen((value) => !value)}
+              >
+                <span className="space-y-1">
+                  <span className={`block h-0.5 w-4 rounded-full bg-current transition ${sidebarOpen ? "translate-y-1.5 rotate-45" : ""}`} />
+                  <span className={`block h-0.5 w-4 rounded-full bg-current transition ${sidebarOpen ? "opacity-0" : ""}`} />
+                  <span className={`block h-0.5 w-4 rounded-full bg-current transition ${sidebarOpen ? "-translate-y-1.5 -rotate-45" : ""}`} />
+                </span>
+              </button>
+            </div>
+
+            <Link href="/" className="flex items-center gap-3 text-foreground no-underline">
+              <Mark />
+              <div className="leading-none">
+                <span className="block text-sm font-bold tracking-tight">CyberSmart</span>
+                <small className="mt-1 block text-[0.58rem] font-semibold uppercase tracking-[0.18em] text-muted-foreground">WORKPLACE</small>
+              </div>
+            </Link>
           </div>
-          {userLoading ? <span className="dashboard-profile-loading" aria-label="Loading account" /> : <ProfileChip name={user?.full_name ?? "Sign in"} badge={user ? `${user.role[0].toUpperCase()}${user.role.slice(1)}` : "Learner"} href={user ? "/dashboard/profile" : "/sign-in"} signedIn={Boolean(user)} className="dashboard-profile-chip" ariaLabel={user ? `Open ${user.role} profile for ${user.full_name}` : "Sign in to your learner account"}/>}
+
+          <nav className="hidden items-center gap-2 md:flex">
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition ${
+                  isCurrent(item)
+                    ? "bg-primary/10 text-primary"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                }`}
+              >
+                <Icon kind={item.icon} />
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+
+          <div className="flex items-center gap-3" ref={notificationsRef}>
+            <div className="relative">
+              <button
+                type="button"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card text-muted-foreground transition hover:border-primary/30 hover:text-primary"
+                aria-label="Notifications"
+                aria-expanded={notificationsOpen}
+                onClick={() => setNotificationsOpen((value) => !value)}
+              >
+                <Bell className="h-4 w-4" />
+              </button>
+
+              {notificationsOpen && (
+                <div className="absolute right-0 top-full z-50 mt-3 w-72 rounded-xl border border-border bg-card p-4 shadow-lg">
+                  <div className="mb-3">
+                    <p className="text-sm font-semibold">Notifications</p>
+                    <p className="mt-1 text-xs text-muted-foreground">Get course updates and reminders.</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={turnOnPush}
+                    disabled={pushBusy}
+                    className="mt-3 w-full rounded-md bg-primary px-3 py-2 text-xs font-semibold text-primary-foreground transition hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-70"
+                  >
+                    {pushBusy ? "Enabling…" : pushEnabled ? "Push enabled" : "Enable notifications"}
+                  </button>
+                  {pushMessage && <p className="mt-3 text-xs text-muted-foreground">{pushMessage}</p>}
+                </div>
+              )}
+            </div>
+
+            {userLoading ? (
+              <span className="h-9 w-9 animate-pulse rounded-full bg-muted" aria-label="Loading account" />
+            ) : (
+              <ProfileChip name={user?.full_name ?? "Sign in"} badge={user ? `${user.role[0].toUpperCase()}${user.role.slice(1)}` : "Guest"} />
+            )}
+          </div>
         </div>
-      </div>
-    </header>
-    {isMobile && sidebarOpen && <button className="dashboard-sidebar-scrim" aria-label="Close learning navigation" onClick={() => setSidebarOpen(false)}/>}
-    <aside className={`dashboard-sidebar ${sidebarOpen ? "dashboard-sidebar-open" : "dashboard-sidebar-closed"}`} id="dashboard-learning-sidebar" ref={sidebarRef}>
-      <div className="dashboard-sidebar-heading"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 5.5c3.5-1 6.5-.2 9 2v13c-2.5-2.2-5.5-3-9-2z"/><path d="M21 5.5c-3.5-1-6.5-.2-9 2v13c2.5-2.2 5.5-3 9-2z"/></svg><span>Learning</span></div>
-      <nav aria-label="Main learning navigation">{navItems.map(item => <Link key={item.href} href={item.href} className={`dashboard-sidebar-link ${isCurrent(item) ? "dashboard-sidebar-link-active" : ""}`} aria-current={isCurrent(item) ? "page" : undefined} onClick={() => isMobile && setSidebarOpen(false)}><Icon kind={item.icon}/><span>{item.label}</span></Link>)}</nav>
-      <div className="dashboard-sidebar-bottom"><span className="sidebar-course-mark"><Mark/></span><span>CYBERSMART<small>WORKPLACE</small></span></div>
-    </aside>
-  </>;
+      </header>
+
+      {isMobile && sidebarOpen && (
+        <button className="fixed inset-0 z-30 bg-slate-950/20" aria-label="Close learning navigation" onClick={() => setSidebarOpen(false)} />
+      )}
+
+      <aside
+        className={`fixed inset-y-[77px] left-0 z-40 w-72 border-r border-border bg-background/95 p-4 backdrop-blur-xl transition-transform duration-200 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
+        id="dashboard-learning-sidebar"
+        ref={sidebarRef}
+      >
+        <div className="mb-6 flex items-center gap-3 rounded-xl border border-border bg-card p-3 shadow-sm">
+          <Mark />
+          <div>
+            <p className="text-sm font-bold">CyberSmart</p>
+            <p className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">Workplace</p>
+          </div>
+        </div>
+
+        <nav className="space-y-2" aria-label="Main learning navigation">
+          {navItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition ${
+                isCurrent(item)
+                  ? "bg-primary/10 text-primary"
+                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
+              }`}
+            >
+              <Icon kind={item.icon} />
+              {item.label}
+            </Link>
+          ))}
+        </nav>
+
+        <div className="mt-auto flex items-center gap-3 rounded-xl border border-border bg-card p-3 text-xs font-medium text-muted-foreground">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
+            <ShieldCheck className="h-4 w-4" />
+          </div>
+          <div>
+            <span className="block text-[10px] uppercase tracking-[0.22em] text-muted-foreground">Course</span>
+            <span className="block text-sm font-semibold text-foreground">CyberSmart</span>
+          </div>
+        </div>
+      </aside>
+    </>
+  );
 }
